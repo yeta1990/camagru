@@ -1,0 +1,7 @@
+services:
+  camagru:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - $PWD:/var/www/html
