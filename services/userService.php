@@ -18,7 +18,7 @@
         }
 
         public function createUser($userObject){
-            $this->user = new User(1, 2, 3, 4, 5);
+            $this->user = new User(223, 33, 44);
             return $this->user;
         }
     }

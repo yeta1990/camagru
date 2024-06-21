@@ -17,23 +17,20 @@ class DbService {
 
     public function insert($object) {
         $query = $this->objectToQuery($object);
-        //$this->query($query);
+        $this->query($query);
     }
 
     private function objectToQuery($obj){
-        $obj = get_object_vars($this);
+        $vars = $obj->getObjectVars();
         $insert_into = "INSERT INTO users (";
         $values = "VALUES (";
-        foreach ($obj as $key => $value) {
-            echo $insert_into;
+        foreach ($vars as $key => $value) {
             $insert_into = $insert_into . $key . ',';
-            echo strval($value);
-            //$values = $values . strval($value) . ',';
+            $values = $values . strval($value) . ',';
         }
         $insert_into = rtrim($insert_into, ',') . ')';
-        $values = $values . ')';
-        echo $insert_into;
-        echo $values;
+        $values = rtrim($values, ',') . ')';
+        echo $insert_into . ' ' . $values;
         return $insert_into . ' ' . $values;
     }
 }
