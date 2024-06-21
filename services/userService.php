@@ -6,20 +6,24 @@
     class UserService {
 
         private $db;
-        private $user;
 
         public function __construct(){
             $this->db = new DbService();
         }
 
         public function getUserById($id){
-            $this->db->query('SELECT * from users where id = ' + $id);
-
+            $results = ($this->db->query('SELECT id, email, username, confirmed from users where id = ' . strval($id)))->fetchArray();
+            if (count($results) == 0){
+                return null;
+            }
+            return new User($results["email"], $results["username"], "", $results["confirmed"]);
         }
 
-        public function createUser($userObject){
-            $this->user = new User(223, 33, 44);
-            return $this->user;
+        public function createUser($email, $username, $password){
+            $user = new User($email, $username, $password);
+            $this->db->insert($user);
+            //to do: catch result and exceptions
+            /*return $this->user;*/
         }
     }
 

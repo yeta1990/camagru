@@ -4,7 +4,7 @@ class DbService {
     private $db;
 
     public function __construct(){
-        $this->db = new SQLite3('db.db');
+        $this->db = new SQLite3('db/db.db');
     }
 
     public function __destruct(){
@@ -12,7 +12,7 @@ class DbService {
     }
 
     public function query($query){
-        $this->db->prepare($query)->execute();
+        return $this->db->prepare($query)->execute();
     }
 
     public function insert($object) {

@@ -2,9 +2,6 @@ services:
   camagru:
     build:
       context: .
-      args:
-        UID: ${HOST_UID}
-        GID: ${HOST_GID}
     ports:
       - "8080:80"
     volumes:

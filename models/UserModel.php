@@ -7,11 +7,11 @@
         protected $password;
         protected $confirmed;
 
-        public function __construct($email, $username, $password){
+        public function __construct($email, $username, $password, $confirmed = 0){
             $this->email = $email;
             $this->username = $username;
             $this->password= $password;
-            $this->confirmed = 0;
+            $this->confirmed = $confirmed;
         }
 
     }
