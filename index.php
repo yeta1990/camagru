@@ -8,9 +8,9 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 $db = new DbService();
 $userService = new UserService();
-//$user = $userService->createUser(2,2,3);
-
-$foundUser = $userService->getUserById(4);
+$user = $userService->createUser("d","d","d");
+$user->print();
+$foundUser = $userService->getUserById(6);
 $foundUser->print();
 
 

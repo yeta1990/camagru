@@ -12,18 +12,21 @@
         }
 
         public function getUserById($id){
-            $results = ($this->db->query('SELECT id, email, username, confirmed from users where id = ' . strval($id)))->fetchArray();
+            $results = $this->db->findById("users", $id)->fetchArray();
             if (count($results) == 0){
                 return null;
             }
-            return new User($results["email"], $results["username"], "", $results["confirmed"]);
+            $foundUser = new User($results["email"], $results["username"], "", $results["confirmed"]);
+            $foundUser->setId($results["id"]);
+            return $foundUser;
         }
 
         public function createUser($email, $username, $password){
             $user = new User($email, $username, $password);
-            $this->db->insert($user);
+            $user->create($user);
+
             //to do: catch result and exceptions
-            /*return $this->user;*/
+            return $user;
         }
     }
 
