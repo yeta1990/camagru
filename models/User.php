@@ -1,7 +1,5 @@
 <?php
 
-    require_once("Model.php");
-    require_once("services/passwordService.php");
     class User extends Model{
         
         protected $email;

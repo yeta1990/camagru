@@ -1,8 +1,5 @@
 <?php
 
-    require_once "dbService.php";
-    require_once "models/UserModel.php";
-
     class UserService {
 
         private $db;
