@@ -7,7 +7,7 @@
         protected $password;
         protected $confirmed;
 
-        public function __construct($email, $username, $password, $confirmed = 0){
+        public function __construct($email, $username, $password = "", $confirmed = 0){
             parent::__construct("users");
             $this->email = $email;
             $this->username = $username;

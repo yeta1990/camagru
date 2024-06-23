@@ -26,47 +26,27 @@ $query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
 $method = $_SERVER['REQUEST_METHOD'];
 
 
-$db = new DbService();
-$userService = new UserService();
-//$user = $userService->signUp("l","l","l");
-//$user->print();
-/*
-$foundUser = $userService->getUserById(19);
-$foundUser->setUsername("asfsafads");
-$userService->changePassword($foundUser->getId(), "spass");
-$foundUser->update();
-$foundUser->print();
-*/
+$subpath = $path;
+array_shift($subpath); //to remove first level of uri, ex: /user
+
+$query_exploded = array();
+if ($query){
+    parse_str($query, $query_exploded);
+}
 
 switch($path[0]){
     case 'user':
         $userController = new UserController();
-        array_shift($path); //to remove /user
-        $query_exploded = array();
-        if ($query){
-            parse_str($query, $query_exploded);
-        }
-        $userController->handleRequest($method, $path, $query_exploded);
-        
+        $userController->handleRequest($method, $subpath, $query_exploded);
         break;
+    case '':
+        require_once "views/home.php";
+        break ;
     default:
-        echo 'default';
+        require_once "views/notFound.php";
+        http_response_code(404);
         break ;
 
 }
-
-/*
-if ($path[0] === '/demo' && $method === 'GET') {
-    require_once 'controllers/demoController.php';
-}
-elseif ($uri === '/register' && $method === 'POST') {
-    echo "register";
-} elseif ($uri === '/login' && $method === 'POST') {
-    echo "login";
-} else {
-    http_response_code(404);
-    echo "Hello";
-}
-*/
 
 ?>
