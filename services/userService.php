@@ -21,12 +21,21 @@
             return $foundUser;
         }
 
-        public function createUser($email, $username, $password){
+        public function signUp($email, $username, $password){
             $user = new User($email, $username, $password);
-            $user->create($user);
+            $user->create();
 
             //to do: catch result and exceptions
             return $user;
+        }
+
+        public function update($new_user){
+            $new_user->update();
+        }
+
+        public function changePassword($id, $newPassword){
+            $hashedPass = PasswordService::hash($newPassword);
+            $this->db->query("UPDATE users SET password = \"{$hashedPass}\" WHERE id = {$id}");
         }
     }
 

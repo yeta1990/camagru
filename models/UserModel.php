@@ -1,6 +1,7 @@
 <?php
 
     require_once("Model.php");
+    require_once("services/passwordService.php");
     class User extends Model{
         
         protected $email;
@@ -17,10 +18,25 @@
         }
 
         public function create(){
-            $this->password = password_hash($this->password, PASSWORD_BCRYPT);
+            $this->password = PasswordService::hash($this->password);
             return parent::create();
         }
 
+        public function getObjectVars(){
+            return parent::getObjectVars();
+        }
+
+        public function setUsername($username){
+            $this->username = $username;
+        }
+
+        public function setPassword($password){
+            $this->password = PasswordService::hash($password, PASSWORD_BCRYPT);
+        }
+
+        public function setConfirmed($confirmed){
+            $this->confirmed = $confirmed;
+        }
 
     }
 ?>

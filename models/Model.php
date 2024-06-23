@@ -12,7 +12,14 @@
         }
 
         public function getObjectVars(){
-            return get_object_vars($this);
+            $vars = get_object_vars($this);
+            unset($vars["dbService"]);
+            unset($vars["tableName"]);
+            unset($vars["password"]);
+            if ($vars["id"] == -1){
+                unset($vars["id"]);
+            }
+            return $vars;
         }
 
         public function print(){
@@ -27,20 +34,23 @@
 
         public function create(){
             /*$this->print();*/
-            $vars = $this->getObjectVars();
-            unset($vars["dbService"]);
-            unset($vars["tableName"]);
-            unset($vars["id"]);
-            $result = $this->dbService->insert($this->tableName, $vars);
-            echo "last row id" . $this->dbService->lastInsertRowID();
+            $result = $this->dbService->insert($this->tableName, $this);
             if ($result){
-                $this->setId($this->dbService->lastInsertRowID());;
+                $this->setId($result);
             }
             return $result;
         }
 
+        public function update(){
+            $result = $this->dbService->update($this->tableName, $this);
+        }
+
         public function setId($id){
             $this->id = $id;
+        }
+
+        public function getId(){
+            return $this->id;
         }
 
     }

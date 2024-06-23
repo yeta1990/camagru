@@ -8,9 +8,12 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 $db = new DbService();
 $userService = new UserService();
-$user = $userService->createUser("d","d","d");
-$user->print();
-$foundUser = $userService->getUserById(6);
+//$user = $userService->signUp("l","l","l");
+//$user->print();
+$foundUser = $userService->getUserById(19);
+$foundUser->setUsername("asfsafads");
+$userService->changePassword($foundUser->getId(), "spass");
+$foundUser->update();
 $foundUser->print();
 
 
