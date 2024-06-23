@@ -34,6 +34,14 @@
             $hashedPass = PasswordService::hash($newPassword);
             $this->db->query("UPDATE users SET password = \"{$hashedPass}\" WHERE id = {$id}");
         }
+
+        public function checkPassword($email, $password){
+            $user = $this->db->findByCustomField("users", "email", $email)->fetchArray();
+            if ($user){ //not correct
+                return password_verify($password, $user["password"]);
+            }
+            return false;
+        }
     }
 
 ?>

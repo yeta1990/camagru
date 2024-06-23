@@ -38,10 +38,26 @@
                 case 'update':
                     $this->update($query);
                     break;
+                case 'login':
+                    $this->loginCheck($query);
+                    break;
                 default:
                     header("HTTP/1.0 404 Not Found");
                     echo "404 Not Found";
                     break;
+            }
+        }
+
+        private function loginCheck($query){
+
+            $result = $this->userService->checkPassword($query["email"], $query["password"]);
+            if ($result){
+                echo "OK";
+            }
+            else {
+                header("HTTP/1.0 400 Bad Request");
+                echo "Bad password";
+                return;
             }
         }
 
