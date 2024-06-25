@@ -26,6 +26,9 @@ $query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
 $method = $_SERVER['REQUEST_METHOD'];
 
 
+/*var_dump($path);
+var_dump($query);
+*/
 $subpath = $path;
 array_shift($subpath); //to remove first level of uri, ex: /user
 
@@ -38,6 +41,10 @@ switch($path[0]){
     case 'user':
         $userController = new UserController();
         $userController->handleRequest($method, $subpath, $query_exploded);
+        break;
+    case 'login':
+        $loginController = new LoginController();
+        $loginController->handleRequest($method, $subpath, $query_exploded);
         break;
     case '':
         require_once "views/home.php";

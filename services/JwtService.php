@@ -13,7 +13,6 @@ class JwtService {
         if ($str64 === false) {
             return false;
         }
-
         $strUrl64 = strtr($str64, '+/', '-_');
         return rtrim($strUrl64, '=');
     }
@@ -21,7 +20,6 @@ class JwtService {
     private function base64URLDecode($strUrl64){
         $str = strtr($strUrl64, '-_', '+/');
         return base64_decode($str);
-
     }
 
     public function encode($payload){
@@ -41,12 +39,30 @@ class JwtService {
 
     }
 
-
-    public function validate($token) {
+    public function decode($token){
         if (preg_match("/^(?<header>.+)\.(?<payload>.+)\.(?<signature>.+)$/",$token,$matches) !== 1) {
             return false;
         }
+        return $matches;
+    }
 
+    public function getExpirationDate($token){
+        return json_decode($this->getDecodedToken($token), true)["exp"];
+    }
+
+    public function getUserId($token){
+        return json_decode($this->getDecodedToken($token), true)["user_id"];
+    }
+
+    public function getDecodedToken($token){
+        $matches = $this->decode($token);
+        $payload = $this->base64URLDecode($matches["payload"]);
+        return $payload;
+    }
+
+    public function validate($token) {
+
+        $matches = $this->decode($token);
         //calculating signature from the header and payload of the token, then comparing with the original signature
         $calculated_signature = hash_hmac("sha256",$matches["header"] . "." . $matches["payload"],$this->jwtKey,true);
         $original_signature = $this->base64URLDecode($matches["signature"]);
@@ -54,7 +70,8 @@ class JwtService {
             return false;
         }
         $payload = json_decode($this->base64URLDecode($matches["payload"]), true);
-        if ($payload["exp"] < time()) {
+        $expiration_date = $this->getExpirationDate($token);
+        if ($expiration_date < time()) {
             echo "token expired";
             return false;
         }
@@ -63,8 +80,9 @@ class JwtService {
 
 
     public function setCookieAndRedirect($token, $destination){
-        setcookie("token", $token, $token["exp"],"/");
-        header("Location: /index.php");
+        $expiration_date = $this->getExpirationDate($token);
+        setcookie("token", $token,$expiration_date,$destination);
+        header("Location: /");
     }
 
 
@@ -76,7 +94,7 @@ class JwtService {
             "exp" => time() + $expiration_time
         ];
         
-        return json_encode($payload);
+        return $this->encode($payload);
     }
 
 

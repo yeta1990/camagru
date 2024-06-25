@@ -3,8 +3,10 @@
     class UserController extends Controller{
 
         private $userService;
+        private $jwtService;
 
         public function __construct(){
+            $this->jwtService = new JwtService("keyff");
             $this->userService = new UserService();
         }
 
@@ -49,10 +51,12 @@
         }
 
         private function loginCheck($query){
-
-            $result = $this->userService->checkPassword($query["email"], $query["password"]);
+            $username = $_POST['email'];
+            $password = $_POST['password'];
+            $result = $this->userService->checkPassword($username, $password);
             if ($result){
-                echo "OK";
+                $token = $this->jwtService->generateToken("1");
+                $this->jwtService->setCookieAndRedirect($token, '/');
             }
             else {
                 http_response_code(401);
@@ -72,7 +76,7 @@
             */
             try {
                 //$decoded = JWT::decode($token, new Key($this->secretKey, 'HS256'));
-                //$userId = $decoded->sub; // Asumiendo que el ID del usuario está en 'sub'
+                //$userId = $decoded->user_id; // Asumiendo que el ID del usuario está en 'user_id'
                 $id = 1;
                 $user = $this->userService->getUserById($id)->getObjectVars();
                 $this->renderEditView($user);
@@ -101,6 +105,7 @@
             }
             require_once 'views/user/editUserOk.php';
         }
+
         private function viewProfile($query){
             if (isset($query["id"])){
                 $user = $this->userService->getUserById($query["id"])->getObjectVars();
@@ -110,6 +115,7 @@
                 return;
             }
         }
+
         private function renderEditView($user){
             require_once 'views/user/editUser.php';
         }
