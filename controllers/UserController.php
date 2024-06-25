@@ -55,8 +55,8 @@
                 echo "OK";
             }
             else {
-                header("HTTP/1.0 400 Bad Request");
-                echo "Bad password";
+                http_response_code(401);
+                echo "invalid auth";
                 return;
             }
         }
