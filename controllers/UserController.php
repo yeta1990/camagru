@@ -112,7 +112,8 @@
         private function viewProfile($query){
             if (isset($query["id"])){
                 $user = $this->userService->getUserById($query["id"])->getObjectVars();
-                require_once 'views/user/viewUser.php';
+                echo json_encode($user);
+                //require_once 'views/user/viewUser.php';
             } else {
                 header("HTTP/1.0 400 Bad Request");
                 return;

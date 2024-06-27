@@ -38,6 +38,9 @@ if ($query){
 }
 
 switch($path[0]){
+    case 'profile':
+        require_once 'views/user/profile.html';
+        break;
     case 'user':
         $userController = new UserController();
         $userController->handleRequest($method, $subpath, $query_exploded);
