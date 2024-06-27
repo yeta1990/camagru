@@ -79,13 +79,6 @@ class JwtService {
     }
 
 
-    public function setCookieAndRedirect($token, $destination){
-        $expiration_date = $this->getExpirationDate($token);
-        setcookie("token", $token,$expiration_date,$destination);
-        header("Location: /");
-    }
-
-
     public function generateToken($user_id){
 
         $expiration_time = 604800; //7 days

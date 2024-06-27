@@ -6,14 +6,12 @@
         }
 
         protected function handleGet($action, $query){
-            switch ($action[0]) {
-                case '':
-                    $this->viewLoginForm();
-                    break;
-                default:
-                    header("HTTP/1.0 404 Not Found");
-                    echo "404 Not Found";
-                    break;
+            if (count($action) == 0){
+                $this->viewLoginForm();
+            }
+            else{
+                header("HTTP/1.0 404 Not Found");
+                echo "404 Not Found";
             }
         }
 

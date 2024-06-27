@@ -51,12 +51,15 @@
         }
 
         private function loginCheck($query){
-            $username = $_POST['email'];
-            $password = $_POST['password'];
+            $request_body = json_decode(file_get_contents('php://input'), true);
+            $username = $request_body['email'];
+            $password = $request_body['password'];
             $result = $this->userService->checkPassword($username, $password);
             if ($result){
                 $token = $this->jwtService->generateToken("1");
-                $this->jwtService->setCookieAndRedirect($token, '/');
+                header("ok", true, 200);
+                echo json_encode(["token" => $token]);
+                exit ;
             }
             else {
                 http_response_code(401);
