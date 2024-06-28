@@ -1,12 +1,11 @@
 function authFetch(url, options = {}) {
-    const token = localStorage.getItem('jwtToken');
-    if (!token) {
-        return Promise.reject(new Error('No token found in localStorage'));
-    }
-
+    const token = localStorage.getItem('token');
     const headers = options.headers || {};
-    headers['Authorization'] = `Bearer ${token}`;
-    headers['Content-Type'] = 'application/json';
+
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+        headers['Content-Type'] = 'application/json';
+    }
 
     const updatedOptions = {
         ...options,

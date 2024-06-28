@@ -16,8 +16,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const userId = 1;
-            authFetch(`/user/view?id=${userId}`)
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const userId = urlParams.get("id");
+            authFetch(`/api/user/view?id=${userId}`)
                 .then(data => {
                     document.getElementById('id').innerText = data.id;
                     document.getElementById('email').innerText = data.email;

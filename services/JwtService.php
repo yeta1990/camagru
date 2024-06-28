@@ -61,18 +61,28 @@ class JwtService {
     }
 
     public function validate($token) {
-
+        if (!$token){
+            return false;
+        }
         $matches = $this->decode($token);
         //calculating signature from the header and payload of the token, then comparing with the original signature
-        $calculated_signature = hash_hmac("sha256",$matches["header"] . "." . $matches["payload"],$this->jwtKey,true);
-        $original_signature = $this->base64URLDecode($matches["signature"]);
+        if (!$matches){
+            return false;
+        }
+        try {
+            $calculated_signature = hash_hmac("sha256",$matches["header"] . "." . $matches["payload"],$this->jwtKey,true);
+            $original_signature = $this->base64URLDecode($matches["signature"]);
+        }
+        catch (Exception $e){
+            return false;
+        }
+
         if (!hash_equals($calculated_signature, $original_signature)) {
             return false;
         }
         $payload = json_decode($this->base64URLDecode($matches["payload"]), true);
         $expiration_date = $this->getExpirationDate($token);
         if ($expiration_date < time()) {
-            echo "token expired";
             return false;
         }
         return $payload;

@@ -19,16 +19,21 @@ function myAutoloader($className) {
 
 spl_autoload_register('myAutoloader');
 
+$whitelistRoutes = [
+    [
+        "path" => "api/user/login",
+        "method" => "POST"
+    ]
+];
+
+$authService = new AuthService($whitelistRoutes);
+
 
 $path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 $path = explode('/', $path);
 $query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
 $method = $_SERVER['REQUEST_METHOD'];
 
-
-/*var_dump($path);
-var_dump($query);
-*/
 $subpath = $path;
 array_shift($subpath); //to remove first level of uri, ex: /user
 
@@ -37,17 +42,24 @@ if ($query){
     parse_str($query, $query_exploded);
 }
 
+$authService->checkPath();
+
 switch($path[0]){
     case 'profile':
         require_once 'views/user/profile.html';
         break;
-    case 'user':
-        $userController = new UserController();
-        $userController->handleRequest($method, $subpath, $query_exploded);
-        break;
     case 'login':
-        $loginController = new LoginController();
-        $loginController->handleRequest($method, $subpath, $query_exploded);
+        require_once 'views/login/login.php';
+        break;
+    case 'api':
+        array_shift($subpath);
+        if ($path[1] == 'user'){
+            $userController = new UserController();
+            $userController->handleRequest($method, $subpath, $query_exploded);
+        }else if($path[1] == 'login'){
+            $loginController = new LoginController();
+            $loginController->handleRequest($method, $subpath, $query_exploded);
+        }
         break;
     case '':
         require_once "views/home.php";

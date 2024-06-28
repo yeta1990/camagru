@@ -69,22 +69,11 @@
         }
 
         private function edit(){
-            $headers = getallheaders();
-            /*
-            if (!isset($headers['Authorization'])) {
-                header("HTTP/1.0 401 Unauthorized");
-                echo "401 Unauthorized";
-                return;
-            }
-            */
             try {
-                //$decoded = JWT::decode($token, new Key($this->secretKey, 'HS256'));
-                //$userId = $decoded->user_id; // Asumiendo que el ID del usuario está en 'user_id'
                 $id = 1;
                 $user = $this->userService->getUserById($id)->getObjectVars();
                 $this->renderEditView($user);
     
-                // Load user data and show edit view
             } catch (Exception $e) {
                 header("HTTP/1.0 401 Unauthorized");
                 echo "401 Unauthorized";
