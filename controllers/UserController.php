@@ -8,79 +8,47 @@
         public function __construct(){
             $this->jwtService = new JwtService("keyff");
             $this->userService = new UserService();
+            $this->initRoutes();
         }
 
-        protected function handleGet($action, $query) {
-            if (count($action) == 0){
-                header("HTTP/1.0 404 Not Found");
-                echo "404 Not Found";
-                return ;
-            }
-            switch ($action[0]) {
-                case 'view':
-                    $this->viewProfile($query);
-                    break;
-                case 'edit':
-                    $this->edit($query);
-                    break;
-                default:
-                    header("HTTP/1.0 404 Not Found");
-                    echo "404 Not Found";
-                    break;
-            }
+        protected function initRoutes() {
+            $this->addRoute('GET', 'api/user/view', 'viewProfile');
+            $this->addRoute('GET', 'api/user/edit', 'edit');
+            $this->addRoute('POST', 'api/user/update', 'update');
+            $this->addRoute('POST', 'api/user/login', 'loginCheck');
         }
 
-        protected function handlePost($action, $query) {
-            if (count($action) == 0){
-                header("HTTP/1.0 404 Not Found");
-                echo "404 Not Found";
-                return ;
-            }
-            switch ($action[0]) {
-                case 'update':
-                    $this->update($query);
-                    break;
-                case 'login':
-                    $this->loginCheck($query);
-                    break;
-                default:
-                    header("HTTP/1.0 404 Not Found");
-                    echo "404 Not Found";
-                    break;
-            }
-        }
-
-        private function loginCheck($query){
+        protected function loginCheck(){
             $request_body = json_decode(file_get_contents('php://input'), true);
-            $username = $request_body['email'];
-            $password = $request_body['password'];
-            $result = $this->userService->checkPassword($username, $password);
-            if ($result){
-                $token = $this->jwtService->generateToken("1");
-                header("ok", true, 200);
-                echo json_encode(["token" => $token]);
-                exit ;
-            }
-            else {
-                http_response_code(401);
-                echo "invalid auth";
-                return;
+            if (isset($request_body["email"]) && isset($request_body["password"])){
+                $username = $request_body['email'];
+                $password = $request_body['password'];
+                $result = $this->userService->checkPassword($username, $password);
+                if ($result){
+                    $token = $this->jwtService->generateToken("1");
+                    echo json_encode(["token" => $token]);
+                }
+                else {
+                    http_response_code(401);
+                }
+            }else{
+                http_response_code(400);
             }
         }
 
-        private function edit(){
+        protected function edit(){
             try {
                 $id = 1;
                 $user = $this->userService->getUserById($id)->getObjectVars();
-                $this->renderEditView($user);
+                exit;
+                //to do: return result
     
             } catch (Exception $e) {
-                header("HTTP/1.0 401 Unauthorized");
-                echo "401 Unauthorized";
+                http_response_code(401);
             }
         }
 
-        private function update(){
+        protected function update(){
             $input_parsed = array();
             parse_str(file_get_contents('php://input'), $input_parsed);
 
@@ -98,19 +66,15 @@
             require_once 'views/user/editUserOk.php';
         }
 
-        private function viewProfile($query){
-            if (isset($query["id"])){
-                $user = $this->userService->getUserById($query["id"])->getObjectVars();
+        protected function viewProfile(){
+            if (isset($this->query["id"])){
+                $user = $this->userService->getUserById($this->query["id"])->getObjectVars();
                 echo json_encode($user);
                 //require_once 'views/user/viewUser.php';
             } else {
                 header("HTTP/1.0 400 Bad Request");
                 return;
             }
-        }
-
-        private function renderEditView($user){
-            require_once 'views/user/editUser.php';
         }
 
     }

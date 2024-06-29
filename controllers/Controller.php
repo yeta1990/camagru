@@ -1,22 +1,42 @@
 <?php
+abstract class Controller {
 
-    abstract class Controller {
-        public function handleRequest($method, $action, $params) {
-            switch ($method) {
-                case 'GET':
-                    $this->handleGet($action, $params);
-                    break;
-                case 'POST':
-                    $this->handlePost($action, $params);
-                    break;
-                default:
-                    header("HTTP/1.0 405 Method Not Allowed");
-                    echo "405 Method Not Allowed";
-                    break;
+    protected $routes = [];
+    protected $query;
+
+    protected function addRoute($method, $path, $action) {
+        $this->routes[$method][$path] = $action;
+    }
+
+    abstract protected function initRoutes();
+
+    private function setQuery(){
+        $query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+        $query_exploded = array();
+        if ($query){
+            parse_str($query, $query_exploded);
+        }
+        $this->query = $query_exploded;
+
+    }
+
+
+    public function __call($method, $args) {
+        $this->setQuery();
+
+        $request = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+        if (isset($this->routes[$method][$request])) {
+            $action = $this->routes[$method][$request];
+            if (method_exists($this, $action)) {
+                $this->$action();
+                return ;
             }
         }
-
-        abstract protected function handleGet($action, $params);
-        abstract protected function handlePost($action, $params);
+        $this->notFound();
     }
+
+    protected function notFound() {
+        http_response_code(404);
+    }
+}
 ?>
