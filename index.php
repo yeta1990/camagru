@@ -62,7 +62,7 @@ switch($path[0]){
         }
         break;
     case '':
-        require_once "views/home.php";
+        require_once "views/home.html";
         break ;
     default:
         require_once "views/notFound.php";

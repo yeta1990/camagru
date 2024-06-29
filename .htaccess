@@ -1,5 +1,15 @@
-# .htaccess
 RewriteEngine On
+
+RewriteCond %{REQUEST_URI} ^/api
+RewriteRule ^api/(.*)$ index.php [QSA,L]
+
+RewriteCond %{REQUEST_URI} !^/api
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php [QSA,L]
+RewriteCond %{DOCUMENT_ROOT}/views/$1.html !-f
+RewriteRule ^(.*)$ /views/404.html [L]
+
+RewriteCond %{REQUEST_URI} !^/api
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /views/$1.html [QSA,L]
