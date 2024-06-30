@@ -18,12 +18,39 @@
             return $foundUser;
         }
 
+        public function isUsernameAvailable($username){
+            $num_users = $this->db->query("SELECT count(*) as count from users where username = \"{$username}\"")->fetchArray();
+            if ($num_users["count"] == 0){
+                return true;
+            }
+            return false;
+        }
+
+        public function isEmailAvailable($email){
+            $num_users = $this->db->query("SELECT count(*) as count from users where email = \"{$email}\"")->fetchArray();
+            if ($num_users["count"] == 0){
+                return true;
+            }
+            return false;
+        }
+
         public function signUp($email, $username, $password){
+
+            if (!$this->isUsernameAvailable($username)){
+                http_response_code(401);
+                echo "Username not available";
+                exit ;
+            }
+            if (!$this->isEmailAvailable($email)){
+                http_response_code(401);
+                echo "Email not available";
+                exit ;
+            }
             $user = new User($email, $username, $password);
             $user->create();
 
             //to do: catch result and exceptions
-            return $user;
+            return true;
         }
 
         public function update($new_user){

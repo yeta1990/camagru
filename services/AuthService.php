@@ -32,16 +32,10 @@
         }
 
         private function hasValidToken(){
-            //$this->getBearerToken();
             return $this->jwtService->validate($this->getBearerToken());
         }
 
         private function isWhiteListRoute() {
-            $apiStr = "api";
-            $len = strlen($apiStr);
-            if (substr($this->path, 0, $len) != $apiStr){
-                return true;
-            }
             foreach ($this->whitelist as $route) {
                 if (trim($route["path"],'/') == $this->path && $route["method"] == $this->method) {
                     return true;
@@ -51,14 +45,9 @@
         }
 
         public function checkPath(){
-            //$this->hasValidToken();
-            
             if (!$this->isWhiteListRoute() && !$this->hasValidToken()){
-                header("HTTP/1.0 401 Unauthorized");
-                echo "401 Unauthorized";
-                exit;
+                http_response_code(401);
             }
-            
         }
     }
 

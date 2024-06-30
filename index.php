@@ -25,6 +25,10 @@ $whitelistRoutes = [
     [
         "path" => "api/user/login",
         "method" => "POST"
+    ],
+    [
+        "path" => "api/user/signup",
+        "method" => "POST"
     ]
 ];
 

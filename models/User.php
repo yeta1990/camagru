@@ -20,8 +20,8 @@
             return parent::create();
         }
 
-        public function getObjectVars(){
-            return parent::getObjectVars();
+        public function getObjectVars($safe = true){
+            return parent::getObjectVars($safe);
         }
 
         public function setUsername($username){

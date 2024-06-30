@@ -11,11 +11,13 @@
             $this->id = -1;
         }
 
-        public function getObjectVars(){
+        public function getObjectVars($safe = true){
             $vars = get_object_vars($this);
             unset($vars["dbService"]);
             unset($vars["tableName"]);
-            unset($vars["password"]);
+            if ($safe){
+                unset($vars["password"]);
+            }
             if ($vars["id"] == -1){
                 unset($vars["id"]);
             }

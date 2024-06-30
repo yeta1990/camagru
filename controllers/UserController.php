@@ -16,6 +16,7 @@
             $this->addRoute('GET', 'api/user/edit', 'edit');
             $this->addRoute('POST', 'api/user/update', 'update');
             $this->addRoute('POST', 'api/user/login', 'loginCheck');
+            $this->addRoute('POST', 'api/user/signup', 'signup');
         }
 
         protected function loginCheck(){
@@ -63,7 +64,17 @@
                 header("HTTP/1.0 400 Bad Request");
                 return;
             }
-            require_once 'views/user/editUserOk.php';
+        }
+
+        protected function signup(){
+            $input_parsed = array();
+            parse_str(file_get_contents('php://input'), $input_parsed);
+            if (isset($input_parsed['username'], $input_parsed['email'], $input_parsed["password"])) {
+                $this->userService->signUp($input_parsed["email"], $input_parsed["username"], $input_parsed["password"]);
+            } 
+            else{
+                http_response_code(400);
+            }
         }
 
         protected function viewProfile(){

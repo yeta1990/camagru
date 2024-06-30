@@ -17,14 +17,14 @@ class DbService {
 
     public function insert($tableName, $object) {
         /*echo var_dump($object);*/
-        $vars = $object->getObjectVars();
+        $vars = $object->getObjectVars(false);
         $query = $this->objectToInsertQuery($tableName, $vars);
         $result = $this->query($query);
         //to do: catch exceptions like unique constraint failed, empty field, etc.
         if ($result){
             return $this->db->lastInsertRowID();
         }
-        return -1;//$this->query($query);
+        return -1;
     }
 
     private function objectToInsertQuery($tableName, $vars){
@@ -37,7 +37,6 @@ class DbService {
         }
         $insert_into = rtrim($insert_into, ',') . ')';
         $values = rtrim($values, ',') . ')';
-        echo $insert_into . ' ' . $values;
         return $insert_into . ' ' . $values;
     }
 
