@@ -4,20 +4,22 @@
 
         private $userService;
         private $jwtService;
+        private $authService;
 
         public function __construct(){
             $this->jwtService = new JwtService("keyff");
             $this->userService = new UserService();
+            $this->authService = new AuthService([]);
             $this->initRoutes();
         }
 
         protected function initRoutes() {
             $this->addRoute('GET', 'api/user/view', 'viewProfile');
-            $this->addRoute('GET', 'api/user/edit', 'edit');
             $this->addRoute('GET', 'api/user/whoami', 'whoami');
             $this->addRoute('POST', 'api/user/update', 'update');
             $this->addRoute('POST', 'api/user/login', 'loginCheck');
             $this->addRoute('POST', 'api/user/signup', 'signup');
+            $this->addRoute('POST', 'api/user/edit', 'edit');
         }
 
         protected function loginCheck(){
@@ -45,32 +47,19 @@
         }
 
         protected function edit(){
-            try {
-                $id = 1;
-                $user = $this->userService->getUserById($id)->getObjectVars();
-                exit;
-                //to do: return result
-    
-            } catch (Exception $e) {
-                http_response_code(401);
+            if (!$this->authService->hasEnoughPrivileges()){
+                http_response_code(400);
+                exit ;
             }
-        }
+            $request_body = json_decode(file_get_contents('php://input'), true);
 
-        protected function update(){
-            $input_parsed = array();
-            parse_str(file_get_contents('php://input'), $input_parsed);
-
-            if (isset($input_parsed['id'], $input_parsed['username'], $input_parsed['email'])) {
-                $userId = $input_parsed['id'];
-                $username = $input_parsed['username'];
-                $email = $input_parsed['email'];
-                $userToUpdate = new User($email, $username);
-                $userToUpdate->setId($userId);
-                $this->userService->update($userToUpdate);
-            } else {
-                header("HTTP/1.0 400 Bad Request");
-                return;
+            if (isset($request_body['id'], $request_body['username'], $request_body['email'])) {
+                $this->userService->update($request_body["id"],$request_body["email"], $request_body["username"]);
             }
+            if (isset($request_body['id'], $request_body['password']) && strlen($request_body['password']) > 0){
+                $this->userService->changePassword($request_body['id'], $request_body['password']);
+            }
+            echo json_encode($request_body);
         }
 
         protected function signup(){

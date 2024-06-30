@@ -46,7 +46,7 @@ class DbService {
         $result = $this->query($query);
         //to do: catch exceptions like unique constraint failed, empty field, etc.
         if ($result){
-            echo "Update ok";
+            return 1;
         }
         return -1;//$this->query($query);
 
@@ -62,7 +62,6 @@ class DbService {
         $update = rtrim($update, ',') . ' ';
         $id = $vars["id"];
         $update .= "WHERE id={$id};";
-        echo $update;
         return $update;
     }
 

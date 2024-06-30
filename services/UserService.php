@@ -20,16 +20,22 @@
 
         public function isUsernameAvailable($username){
             $num_users = $this->db->query("SELECT count(*) as count from users where username = \"{$username}\"")->fetchArray();
-            if ($num_users["count"] == 0){
+            if (strlen($username) > 1 && strlen($username) < 256 && $num_users["count"] == 0){
                 return true;
             }
             return false;
         }
 
-
         public function isEmailAvailable($email){
             $num_users = $this->db->query("SELECT count(*) as count from users where email = \"{$email}\"")->fetchArray();
-            if ($num_users["count"] == 0){
+            if (strlen($email) > 1 && strlen($email) < 256 && $num_users["count"] == 0){
+                return true;
+            }
+            return false;
+        }
+
+        public function isPasswordAvailable($password){
+            if (strlen($password) > 8 && strlen($password) < 256){
                 return true;
             }
             return false;
@@ -47,12 +53,11 @@
                 echo "Email not available";
                 exit ;
             }
-            if (strlen($password) < 8){
+            if (!$this->isPasswordAvailable($password)){
                 http_response_code(401);
                 echo "Password must have at least 8 characters";
                 exit ;
             }
-            //to do: password validations 
             
             $user = new User($email, $username, $password);
             $user->create();
@@ -60,15 +65,32 @@
             //to do: send email to confirm signup
 
             //to do: catch result and exceptions
-            
             return true;
         }
 
-        public function update($new_user){
-            $new_user->update();
+        public function update($id, $email, $username){
+            $user = $this->getUserById($id)->getObjectVars();
+            if ($user["username"] != $username && !$this->isUsernameAvailable($username)){
+                http_response_code(401);
+                echo "Username not available";
+                exit ;
+            }
+            if ($user["email"] != $email && !$this->isEmailAvailable($email)){
+                http_response_code(401);
+                echo "Email not available";
+                exit ;
+            }
+            $userToUpdate = new User($email, $username);
+            $userToUpdate->setId($id);
+            $userToUpdate->update();
         }
 
         public function changePassword($id, $newPassword){
+            if (strlen($newPassword) < 8 || strlen($newPassword) > 256){
+                http_response_code(401);
+                echo "Password must have at least 8 characters";
+                exit ;
+            }
             $hashedPass = PasswordService::hash($newPassword);
             $this->db->query("UPDATE users SET password = \"{$hashedPass}\" WHERE id = {$id}");
         }

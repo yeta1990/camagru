@@ -46,6 +46,18 @@
                 exit ;
             }
         }
+
+        public function hasEnoughPrivileges(){
+            $token = $this->jwtService->getBearerToken();
+            $id = $this->jwtService->getUserId($token);
+            $request_body = json_decode(file_get_contents('php://input'), true);
+
+            if ($id != $request_body["id"]){
+                return false;
+            }
+            return true;
+
+        }
     }
 
 ?>
