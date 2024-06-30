@@ -62,6 +62,8 @@
             $user = new User($email, $username, $password);
             $user->create();
 
+            echo json_encode(["code" => 200, "message"=>"ok"]);
+
             //to do: send email to confirm signup
 
             //to do: catch result and exceptions

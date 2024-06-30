@@ -64,8 +64,7 @@
         }
 
         protected function signup(){
-            $input_parsed = array();
-            parse_str(file_get_contents('php://input'), $input_parsed);
+            $input_parsed = json_decode(file_get_contents('php://input'), true);
             if (isset($input_parsed['username'], $input_parsed['email'], $input_parsed["password"])) {
                 $this->userService->signUp($input_parsed["email"], $input_parsed["username"], $input_parsed["password"]);
             } 

@@ -5,8 +5,8 @@ async function authFetch(url, options = {}) {
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
         headers['Content-Type'] = 'application/json';
-    }else if(window.location.pathname != '/login'){
-        window.location.replace("/login");
+    }else if(!["/home", "/signup"].includes(window.location.pathname)){
+        window.location.replace("/home");
     }
 
     const updatedOptions = {
