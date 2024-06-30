@@ -23,12 +23,8 @@
             $this->jwtService = new JwtService("keyff");
         }
 
-        private function getBearerToken(): ?string{
-            $headers = getallheaders();
-            if (isset($headers['Authorization'])) {
-                return trim(str_replace('Bearer', '', $headers['Authorization']));
-            }
-            return null;
+        private function getBearerToken(){
+            return $this->jwtService->getBearerToken();
         }
 
         private function hasValidToken(){
@@ -47,6 +43,7 @@
         public function checkPath(){
             if (!$this->isWhiteListRoute() && !$this->hasValidToken()){
                 http_response_code(401);
+                exit ;
             }
         }
     }

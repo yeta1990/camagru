@@ -13,7 +13,7 @@
             if (count($results) == 0){
                 return null;
             }
-            $foundUser = new User($results["email"], $results["username"], "", $results["confirmed"]);
+            $foundUser = new User($results["email"], $results["username"], $confirmed = $results["confirmed"]);
             $foundUser->setId($results["id"]);
             return $foundUser;
         }
@@ -25,6 +25,7 @@
             }
             return false;
         }
+
 
         public function isEmailAvailable($email){
             $num_users = $this->db->query("SELECT count(*) as count from users where email = \"{$email}\"")->fetchArray();
@@ -46,10 +47,20 @@
                 echo "Email not available";
                 exit ;
             }
+            if (strlen($password) < 8){
+                http_response_code(401);
+                echo "Password must have at least 8 characters";
+                exit ;
+            }
+            //to do: password validations 
+            
             $user = new User($email, $username, $password);
             $user->create();
 
+            //to do: send email to confirm signup
+
             //to do: catch result and exceptions
+            
             return true;
         }
 
@@ -62,10 +73,10 @@
             $this->db->query("UPDATE users SET password = \"{$hashedPass}\" WHERE id = {$id}");
         }
 
-        public function checkPassword($email, $password){
+        public function checkPassword($email, $password): array | bool {
             $user = $this->db->findByCustomField("users", "email", $email)->fetchArray();
-            if ($user){ //not correct
-                return password_verify($password, $user["password"]);
+            if ($user && password_verify($password, $user["password"])){
+                return $user;
             }
             return false;
         }

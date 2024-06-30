@@ -35,7 +35,6 @@
         }
 
         public function create(){
-            /*$this->print();*/
             $result = $this->dbService->insert($this->tableName, $this);
             if ($result){
                 $this->setId($result);

@@ -14,6 +14,7 @@
         protected function initRoutes() {
             $this->addRoute('GET', 'api/user/view', 'viewProfile');
             $this->addRoute('GET', 'api/user/edit', 'edit');
+            $this->addRoute('GET', 'api/user/whoami', 'whoami');
             $this->addRoute('POST', 'api/user/update', 'update');
             $this->addRoute('POST', 'api/user/login', 'loginCheck');
             $this->addRoute('POST', 'api/user/signup', 'signup');
@@ -24,9 +25,9 @@
             if (isset($request_body["email"]) && isset($request_body["password"])){
                 $username = $request_body['email'];
                 $password = $request_body['password'];
-                $result = $this->userService->checkPassword($username, $password);
-                if ($result){
-                    $token = $this->jwtService->generateToken("1");
+                $user = $this->userService->checkPassword($username, $password);
+                if ($user){
+                    $token = $this->jwtService->generateToken($user["id"]);
                     echo json_encode(["token" => $token]);
                 }
                 else {
@@ -35,6 +36,12 @@
             }else{
                 http_response_code(400);
             }
+        }
+
+        protected function whoami(){
+            $token = $this->jwtService->getBearerToken();
+            $id = $this->jwtService->getUserId($token);
+            echo json_encode($this->userService->getUserById($id)->getObjectVars());
         }
 
         protected function edit(){

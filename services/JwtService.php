@@ -22,6 +22,14 @@ class JwtService {
         return base64_decode($str);
     }
 
+    public function getBearerToken(){
+        $headers = getallheaders();
+        if (isset($headers['Authorization'])) {
+            return trim(str_replace('Bearer', '', $headers['Authorization']));
+        }
+        return null;
+    }
+    
     public function encode($payload){
 
         $header = json_encode([
