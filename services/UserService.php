@@ -45,17 +45,17 @@
 
             if (!$this->isUsernameAvailable($username)){
                 http_response_code(401);
-                echo "Username not available";
+                echo json_encode(["code" => 401, "message"=>"Username not available"]);
                 exit ;
             }
             if (!$this->isEmailAvailable($email)){
                 http_response_code(401);
-                echo "Email not available";
+                echo json_encode(["code" => 401, "message"=>"Email not available"]);
                 exit ;
             }
             if (!$this->isPasswordAvailable($password)){
                 http_response_code(401);
-                echo "Password must have at least 8 characters";
+                echo json_encode(["code" => 401, "message"=>"Password must have at least 8 characters"]);
                 exit ;
             }
             
@@ -72,12 +72,12 @@
             $user = $this->getUserById($id)->getObjectVars();
             if ($user["username"] != $username && !$this->isUsernameAvailable($username)){
                 http_response_code(401);
-                echo "Username not available";
+                echo json_encode(["code" => 401, "message"=>"Username not available"]);
                 exit ;
             }
             if ($user["email"] != $email && !$this->isEmailAvailable($email)){
                 http_response_code(401);
-                echo "Email not available";
+                echo json_encode(["code" => 401, "message"=>"Email not available"]);
                 exit ;
             }
             $userToUpdate = new User($email, $username);
@@ -88,7 +88,7 @@
         public function changePassword($id, $newPassword){
             if (strlen($newPassword) < 8 || strlen($newPassword) > 256){
                 http_response_code(401);
-                echo "Password must have at least 8 characters";
+                echo json_encode(["code" => 401, "message"=>"Password must have at least 8 characters"]);
                 exit ;
             }
             $hashedPass = PasswordService::hash($newPassword);

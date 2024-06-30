@@ -15,11 +15,12 @@ async function authFetch(url, options = {}) {
     };
 
     return fetch(url, updatedOptions)
-        .then(response => {
-            if (!response.ok) {
-                return Promise.reject(new Error('Network response was not ok'));
+        .then(response => {return {"status": response.status, "data": response.json()}})
+        .then(async data => {
+            if (data.status != 200){
+                const message = (await data["data"]).message;
+                return Promise.reject(new Error(message));
             }
-            //TO DO: if response code == 401 redirect to login and remove token from localstorage
-            return response.json();
+            return data["data"];
         });
 }

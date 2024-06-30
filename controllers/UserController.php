@@ -59,6 +59,7 @@
             if (isset($request_body['id'], $request_body['password']) && strlen($request_body['password']) > 0){
                 $this->userService->changePassword($request_body['id'], $request_body['password']);
             }
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode($request_body);
         }
 
@@ -77,7 +78,6 @@
             if (isset($this->query["id"])){
                 $user = $this->userService->getUserById($this->query["id"])->getObjectVars();
                 echo json_encode($user);
-                //require_once 'views/user/viewUser.php';
             } else {
                 header("HTTP/1.0 400 Bad Request");
                 return;
