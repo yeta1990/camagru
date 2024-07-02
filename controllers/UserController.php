@@ -93,6 +93,9 @@
 
         protected function verify(){
             if(isset($this->query["token"]) && $this->jwtService->validate($this->query["token"])){
+                $token = $this->query["token"];
+                $userId = $this->jwtService->getUserId($token);
+                $this->userService->confirmUser($userId);
                 echo "verified";
             }
             else{

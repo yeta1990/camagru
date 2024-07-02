@@ -35,7 +35,7 @@
         }
 
         public function isPasswordAvailable($password){
-            if (strlen($password) > 8 && strlen($password) < 256){
+            if (strlen($password) >= 8 && strlen($password) < 256){
                 return true;
             }
             return false;
@@ -61,8 +61,6 @@
             
             $user = new User($email, $username, $password);
             $user_id = $user->create();
-
-            //to do: send email to confirm signup
 
             //to do: catch result and exceptions
             if ($user_id < 1) return 1;
@@ -103,6 +101,11 @@
             }
             return false;
         }
+
+        public function confirmUser($userId){
+            $this->db->query("UPDATE users SET confirmed = 1 where id = ". $userId);
+        }
+
     }
 
 ?>
