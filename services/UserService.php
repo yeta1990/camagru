@@ -60,14 +60,13 @@
             }
             
             $user = new User($email, $username, $password);
-            $user->create();
-
-            echo json_encode(["code" => 200, "message"=>"ok"]);
+            $user_id = $user->create();
 
             //to do: send email to confirm signup
 
             //to do: catch result and exceptions
-            return true;
+            if ($user_id < 1) return 1;
+            return $user_id;
         }
 
         public function update($id, $email, $username){

@@ -6,3 +6,5 @@ services:
       - "8080:80"
     volumes:
       - $PWD:/var/www/html
+    env_file:
+      - .env

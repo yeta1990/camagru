@@ -16,6 +16,7 @@
         protected function initRoutes() {
             $this->addRoute('GET', 'api/user/view', 'viewProfile');
             $this->addRoute('GET', 'api/user/whoami', 'whoami');
+            $this->addRoute('GET', 'api/user/verify', 'verify');
             $this->addRoute('POST', 'api/user/update', 'update');
             $this->addRoute('POST', 'api/user/login', 'loginCheck');
             $this->addRoute('POST', 'api/user/signup', 'signup');
@@ -66,7 +67,14 @@
         protected function signup(){
             $input_parsed = json_decode(file_get_contents('php://input'), true);
             if (isset($input_parsed['username'], $input_parsed['email'], $input_parsed["password"])) {
-                $this->userService->signUp($input_parsed["email"], $input_parsed["username"], $input_parsed["password"]);
+                $user_id = $this->userService->signUp($input_parsed["email"], $input_parsed["username"], $input_parsed["password"]);
+                $confirmationToken = $this->jwtService->generateConfirmationAccountToken($user_id);
+                MailService::send(
+                    $input_parsed['email'],
+                    $input_parsed['username'],
+                    'Confirm registration in camagru-albgarci',
+                    'Verify your account in camagru-albgarci: <a href="http://localhost:8080/api/user/verify?token=' . $confirmationToken . '">Verify</a>');
+                echo json_encode(["code" => 200, "message"=>"ok"]);
             } 
             else{
                 http_response_code(400);
@@ -83,5 +91,13 @@
             }
         }
 
+        protected function verify(){
+            if(isset($this->query["token"]) && $this->jwtService->validate($this->query["token"])){
+                echo "verified";
+            }
+            else{
+                echo "not verified";
+            }
+        }
     }
 ?>

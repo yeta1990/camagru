@@ -1,1 +1,7 @@
 sqlite3 db.db < config/create_user_table.sql
+
+
+env variables:
+
+MAILJET_USER=''
+MAILJET_PASS=''

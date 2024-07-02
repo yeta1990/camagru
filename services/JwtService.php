@@ -108,6 +108,17 @@ class JwtService {
         return $this->encode($payload);
     }
 
+    public function generateConfirmationAccountToken($user_id){
+
+        $expiration_time = 1800; //30min
+        $payload = [
+            "user_id" => $user_id,
+            "exp" => time() + $expiration_time
+        ];
+        
+        return $this->encode($payload);
+    }
+
 
 }
 
