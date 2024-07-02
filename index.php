@@ -33,6 +33,10 @@ $whitelistRoutes = [
     [
         "path" => "api/user/verify",
         "method" => "GET"
+    ],
+    [
+        "path" => "api/user/recover",
+        "method" => "POST"
     ]
 ];
 

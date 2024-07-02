@@ -3,9 +3,11 @@
     class UserService {
 
         private $db;
+        private $jwtService;
 
         public function __construct(){
             $this->db = new DbService();
+            $this->jwtService = new JwtService("keyff");
         }
 
         public function getUserById($id){
@@ -16,6 +18,10 @@
             $foundUser = new User($results["email"], $results["username"], $confirmed = $results["confirmed"]);
             $foundUser->setId($results["id"]);
             return $foundUser;
+        }
+
+        public function getUserByEmail($email){
+            return $this->db->findByCustomField("users", "email", $email)->fetchArray();
         }
 
         public function isUsernameAvailable($username){
@@ -106,6 +112,16 @@
             $this->db->query("UPDATE users SET confirmed = 1 where id = ". $userId);
         }
 
+
+        public function recover($email){
+            if (!$this->isEmailAvailable($email)){ //if the mail isn't available, that means the user exists...
+                $user = $this->getUserByEmail($email);
+                $confirmationToken = $this->jwtService->generateConfirmationAccountToken($user["id"]);
+                MailService::send($email, $email, 'Recover password',
+                    'Change the password for your account in camagru-albgarci: <a href="http://localhost:8080/user/edit/pass?token=' . $confirmationToken . '">Verify</a>'
+                );
+            }
+        }
     }
 
 ?>

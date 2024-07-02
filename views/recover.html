@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User</title>
+</head>
+<body>
+    <h1>Recover password</h1>
+    <form id="recoverForm">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email">
+        <br>
+        <input type="submit">
+        
+    </form>
+    <span style="visibility: hidden;" id="recoverForm"></span>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            localStorage.removeItem('token'); // Elimina el token del localStorage
+        });
+
+        document.getElementById('recoverForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+
+            fetch('/api/user/recover', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email })
+            })
+            .then(data => {
+                document.getElementById("signupFeedback").textContent = "If the email is valid, it will receive a recovery email";
+                document.getElementById("signupFeedback").style.visibility= "visible";
+            })
+            .catch(error => {
+            });
+        });
+    </script>
+</body>
+</html>

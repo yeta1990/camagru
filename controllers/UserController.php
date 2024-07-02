@@ -17,10 +17,10 @@
             $this->addRoute('GET', 'api/user/view', 'viewProfile');
             $this->addRoute('GET', 'api/user/whoami', 'whoami');
             $this->addRoute('GET', 'api/user/verify', 'verify');
-            $this->addRoute('POST', 'api/user/update', 'update');
             $this->addRoute('POST', 'api/user/login', 'loginCheck');
             $this->addRoute('POST', 'api/user/signup', 'signup');
             $this->addRoute('POST', 'api/user/edit', 'edit');
+            $this->addRoute('POST', 'api/user/recover', 'recover');
         }
 
         protected function loginCheck(){
@@ -101,6 +101,16 @@
             else{
                 echo "not verified";
             }
+        }
+
+
+        protected function recover(){
+            $request_body = json_decode(file_get_contents('php://input'), true);
+            if(isset($request_body["email"]) ){
+                $this->userService->recover($request_body["email"]);
+            }
+            echo json_encode(["code" => 200, "message"=>"ok"]);
+
         }
     }
 ?>
