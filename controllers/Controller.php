@@ -20,6 +20,11 @@ abstract class Controller {
 
     }
 
+    protected function responseError($code, $message){
+        http_response_code($code);
+        echo json_encode(["code" => $code, "message" => $message]);
+        exit;
+    }
 
     public function __call($method, $args) {
         $this->setQuery();
@@ -37,6 +42,7 @@ abstract class Controller {
 
     protected function notFound() {
         http_response_code(404);
+        exit;
     }
 }
 ?>
