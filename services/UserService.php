@@ -87,6 +87,7 @@
             }
             $userToUpdate = new User($email, $username);
             $userToUpdate->setId($id);
+            $userToUpdate->setConfirmed();
             $userToUpdate->update();
         }
 

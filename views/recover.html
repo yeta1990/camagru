@@ -13,7 +13,7 @@
         <input type="submit">
         
     </form>
-    <span style="visibility: hidden;" id="recoverForm"></span>
+    <span style="visibility: hidden;" id="recoverFormBanner"></span>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             localStorage.removeItem('token'); // Elimina el token del localStorage
@@ -32,8 +32,8 @@
                 body: JSON.stringify({ email })
             })
             .then(data => {
-                document.getElementById("signupFeedback").textContent = "If the email is valid, it will receive a recovery email";
-                document.getElementById("signupFeedback").style.visibility= "visible";
+                document.getElementById("recoverFormBanner").textContent = "If the email is valid, it will receive a recovery email";
+                document.getElementById("recoverFormBanner").style.visibility= "visible";
             })
             .catch(error => {
             });

@@ -41,7 +41,7 @@
                 body: JSON.stringify({ email, username, password })
             })
             .then(data => {
-                document.getElementById("signupFeedback").textContent = "Created successfully";
+                document.getElementById("signupFeedback").textContent = "Created successfully. Before login, you must confirm your account, check your mail!";
                 document.getElementById("signupFeedback").style.visibility= "visible";
             })
             .catch(error => {

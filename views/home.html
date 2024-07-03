@@ -18,8 +18,10 @@
     </form>
 
     <br>
+    <span style="visibility: hidden;" id="loginFormBanner"></span>
     <br>
     <a href="/recover">Forgot password?</a>
+    
     <script>
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -50,14 +52,18 @@
                     // Guarda el token en localStorage
                     localStorage.setItem('token', data.token);
                     window.location.replace("/user/edit");
-                } else {
-                    console.error('Login failed');
-                    alert('Login failed. Please check your credentials and try again.');
+                } else if (data.message) {
+                    document.getElementById("loginFormBanner").textContent = data.message;
+                    document.getElementById("loginFormBanner").style.visibility= "visible";
+                }
+                else{
+                    document.getElementById("loginFormBanner").textContent = "Try again";
+                    document.getElementById("loginFormBanner").style.visibility= "visible";
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again later.');
+                document.getElementById("loginFormBanner").textContent = "Bad credentials, try again";
+                document.getElementById("loginFormBanner").style.visibility= "visible";
             });
         });
     </script>

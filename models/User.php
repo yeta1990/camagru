@@ -32,8 +32,12 @@
             $this->password = PasswordService::hash($password, PASSWORD_BCRYPT);
         }
 
-        public function setConfirmed($confirmed){
-            $this->confirmed = $confirmed;
+        public function setConfirmed(){
+            $this->confirmed = 1;
+        }
+
+        public function isConfirmed(){
+            return $this->confirmed;
         }
 
     }

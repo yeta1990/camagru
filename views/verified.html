@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting</title>
+    <script>
+        function redirect() {
+            setTimeout(function() {
+                window.location.href = '/home';
+                localStorage.removeItem("token");
+            }, 3000);
+        }
+    </script>
+</head>
+<body onload="redirect()">
+    <p>Verified, you will be redirected in 3 seconds.</p>
+    <a href="/home">Go now</a>
+</body>
+</html>

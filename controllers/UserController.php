@@ -29,9 +29,12 @@
                 $username = $request_body['email'];
                 $password = $request_body['password'];
                 $user = $this->userService->checkPassword($username, $password);
-                if ($user){
+                if ($user && $user["confirmed"]){ 
                     $token = $this->jwtService->generateToken($user["id"]);
                     echo json_encode(["token" => $token]);
+                }
+                else if ($user){
+                    echo json_encode(["message" => "Before your first login you must confirm your account. Check your email!"]);
                 }
                 else {
                     http_response_code(401);
@@ -96,9 +99,11 @@
                 $token = $this->query["token"];
                 $userId = $this->jwtService->getUserId($token);
                 $this->userService->confirmUser($userId);
-                echo "verified";
+                header("HTTP/1.1 301 Moved Permanently");
+                header("Location: /verified");
             }
             else{
+                //to do, send a new verification email
                 echo "not verified";
             }
         }
