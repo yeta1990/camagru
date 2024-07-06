@@ -1,7 +1,7 @@
 import { isValidPassword, validLength, isValidEmail } from './formValidation.js';
 
 document.addEventListener('DOMContentLoaded', function() {
-    localStorage.removeItem('token'); // Elimina el token del localStorage
+    localStorage.removeItem('token'); 
 });
 
 document.getElementById('signupForm').addEventListener('submit', function(event) {

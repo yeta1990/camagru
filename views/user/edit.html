@@ -6,6 +6,7 @@
     <script src="/scripts/authFetch.js" defer></script>
 </head>
 <body>
+    <div id="headerContainer"></div>
     <h1>Edit User</h1>
     <form id="editForm">
         <input type="hidden" name="id" id="id">
@@ -21,6 +22,8 @@
         
     </form>
     <span style="visibility: hidden;" id="editFeedback"></span>
+    <div id="footerContainer"></div>
+    <script src="/scripts/templateLoader.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             authFetch(`/api/user/whoami`)
@@ -57,8 +60,6 @@
             .catch(error => {
                 document.getElementById("editFeedback").textContent = error;
                 document.getElementById("editFeedback").style.visibility = "visible";
-                console.error('Error:', error);
-                //alert('An error occurred. Please try again later.');
             });
         });
     </script>
