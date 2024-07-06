@@ -55,7 +55,8 @@ array_shift($path); //to remove "/api" from uri
 //loading controllers
 $controllers = [
     'user' => 'UserController',
-    'login' => 'LoginController'
+    'login' => 'LoginController',
+    'image' => 'ImageController'
 ];
 
 
