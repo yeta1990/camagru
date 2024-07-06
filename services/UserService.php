@@ -40,14 +40,26 @@
             return false;
         }
 
-        public function isPasswordAvailable($password){
-            if (strlen($password) >= 8 && strlen($password) < 256){
-                return true;
-            }
-            return false;
+        public function isValidPassword($password) {
+            $minLength = 8;
+            $hasUpperCase = preg_match('/[A-Z]/', $password);
+            $hasLowerCase = preg_match('/[a-z]/', $password);
+            $hasNumber = preg_match('/\d/', $password);
+        
+            return strlen($password) >= $minLength && $hasUpperCase && $hasLowerCase && $hasNumber;
+        }
+
+        private function validLength($field){
+            return strlen($field) > 0 && strlen($field) <= 256;
         }
 
         public function signUp($email, $username, $password){
+
+            if (!$this->validLength($email) || !$this->validLength($username) || !$this->validLength($password)){
+                http_response_code(401);
+                echo json_encode(["code" => 401, "message"=>"Invalid length of fields"]);
+                exit ;
+            }
 
             if (!$this->isUsernameAvailable($username)){
                 http_response_code(401);
@@ -59,12 +71,12 @@
                 echo json_encode(["code" => 401, "message"=>"Email not available"]);
                 exit ;
             }
-            if (!$this->isPasswordAvailable($password)){
+            if (!$this->isValidPassword($password)){
                 http_response_code(401);
-                echo json_encode(["code" => 401, "message"=>"Password must have at least 8 characters"]);
+                echo json_encode(["code" => 401, "message"=>"Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number."]);
                 exit ;
             }
-            
+
             $user = new User($email, $username, $password);
             $user_id = $user->create();
 
@@ -74,15 +86,20 @@
         }
 
         public function update($id, $email, $username){
+            if (!$this->validLength($email) || !$this->validLength($username)){
+                http_response_code(400);
+                echo json_encode(["code" => 400, "message"=>"Invalid length of fields"]);
+                exit ;
+            }
             $user = $this->getUserById($id)->getObjectVars();
             if ($user["username"] != $username && !$this->isUsernameAvailable($username)){
-                http_response_code(401);
-                echo json_encode(["code" => 401, "message"=>"Username not available"]);
+                http_response_code(400);
+                echo json_encode(["code" => 400, "message"=>"Username not available"]);
                 exit ;
             }
             if ($user["email"] != $email && !$this->isEmailAvailable($email)){
-                http_response_code(401);
-                echo json_encode(["code" => 401, "message"=>"Email not available"]);
+                http_response_code(400);
+                echo json_encode(["code" => 400, "message"=>"Email not available"]);
                 exit ;
             }
             $userToUpdate = new User($email, $username);
@@ -92,9 +109,9 @@
         }
 
         public function changePassword($id, $newPassword){
-            if (strlen($newPassword) < 8 || strlen($newPassword) > 256){
-                http_response_code(401);
-                echo json_encode(["code" => 401, "message"=>"Password must have at least 8 characters"]);
+            if (!$this->isValidPassword($newPassword)){
+                http_response_code(400);
+                echo json_encode(["code" => 400, "message"=>"Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number."]);
                 exit ;
             }
             $hashedPass = PasswordService::hash($newPassword);

@@ -18,7 +18,11 @@ async function authFetch(url, options = {}) {
     return fetch(url, updatedOptions)
         .then(response => {return {"status": response.status, "data": response.json()}})
         .then(async data => {
-            if (data.status != 200){
+            if (data.status == 401){
+                localStorage.removeItem('token');
+                window.location.replace("/home");
+            }
+            else if (data.status != 200){
                 const message = (await data["data"]).message;
                 return Promise.reject(new Error(message));
             }

@@ -29,7 +29,7 @@ class JwtService {
         }
         return null;
     }
-    
+
     public function encode($payload){
 
         $header = json_encode([

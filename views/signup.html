@@ -2,53 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit User</title>
+    <title>Signup</title>
     <script src="/scripts/authFetch.js" defer></script>
+    <script type="module" src="/scripts/signup.js" defer></script>
 </head>
 <body>
     <h1>Signup</h1>
+    All fields are required.
     <form id="signupForm">
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username">
+        <input type="text" id="username" name="username" required>
         <br>
         <label for="email">Email:</label>
-        <input type="text" id="email" name="email">
+        <input type="text" id="email" name="email" required>
         <br>
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password">
+        <input type="password" id="password" name="password" required>
         <br>
-        <input type="submit">
-        
+        <input type="submit" value="Sign Up">
     </form>
     <span style="visibility: hidden;" id="signupFeedback"></span>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            localStorage.removeItem('token'); // Elimina el token del localStorage
-        });
-
-        document.getElementById('signupForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const username = document.getElementById('username').value;
-
-            authFetch('/api/user/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, username, password })
-            })
-            .then(data => {
-                document.getElementById("signupFeedback").textContent = "Created successfully. Before login, you must confirm your account, check your mail!";
-                document.getElementById("signupFeedback").style.visibility= "visible";
-            })
-            .catch(error => {
-                document.getElementById("signupFeedback").textContent = error;
-                document.getElementById("signupFeedback").style.visibility = "visible";
-            });
-        });
     </script>
 </body>
 </html>

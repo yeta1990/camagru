@@ -43,6 +43,9 @@
         public function checkPath(){
             if (!$this->isWhiteListRoute() && !$this->hasValidToken()){
                 http_response_code(401);
+                echo json_encode(["code" => 401, "message"=>"Bad auth"]);
+
+                
                 exit ;
             }
         }
