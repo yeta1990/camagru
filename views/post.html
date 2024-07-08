@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User</title>
+    <script src="/scripts/authFetch.js" defer></script>
+</head>
+<body>
+    <div id="headerContainer"></div>
+    <h1>Post image</h1>
+
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="imageFile" name="imageFile" accept="image/*" required>
+        <button type="submit">Upload image</button>
+    </form>
+
+    <span style="visibility: hidden;" id="formFeedback"></span>
+    <div id="footerContainer"></div>
+    <script src="/scripts/templateLoader.js"></script>
+    <script>
+
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+
+            const token = localStorage.getItem('token');
+            const headers = {};
+
+            if (token) {
+                //to do: check exp date from token. if expired, remove token and redirect to home
+                headers['Authorization'] = `Bearer ${token}`;
+            }else if(!["/home", "/signup"].includes(window.location.pathname)){
+                window.location.replace("/home");
+            }
+            event.preventDefault();
+            var formData = new FormData();
+            var imageFile = document.getElementById('imageFile').files[0];
+            formData.append('imageFile', imageFile);
+
+            fetch('/api/image', {
+                method: 'POST',
+                headers,
+                body: formData
+            })//, 'multipart/form-data')
+            .then(data => {
+                document.getElementById("formFeedback").textContent = "Upload successfully";
+                document.getElementById("formFeedback").style.visibility= "visible";
+                console.log(data);
+            })
+            .catch(error => {
+                document.getElementById("formFeedback").textContent = error;
+                document.getElementById("formFeedback").style.visibility = "visible";
+            });
+        });
+    </script>
+</body>
+</html>

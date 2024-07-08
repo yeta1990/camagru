@@ -25,6 +25,10 @@
             return parent::getObjectVars($safe);
         }
 
+        public function getLikes(){
+            return explode(',', $this->likes);
+        }
+
         //to do: function to convert string of array [] likes in a real array
 
     }

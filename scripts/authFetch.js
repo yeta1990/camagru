@@ -1,11 +1,11 @@
-async function authFetch(url, options = {}) {
+async function authFetch(url, options = {}, contentType = 'application/json') {
     const token = localStorage.getItem('token');
     const headers = options.headers || {};
 
     if (token) {
         //to do: check exp date from token. if expired, remove token and redirect to home
         headers['Authorization'] = `Bearer ${token}`;
-        headers['Content-Type'] = 'application/json';
+        headers['Content-Type'] = contentType;
     }else if(!["/home", "/signup"].includes(window.location.pathname)){
         window.location.replace("/home");
     }

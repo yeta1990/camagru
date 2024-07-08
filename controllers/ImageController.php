@@ -5,10 +5,12 @@
         private $userService;
         private $jwtService;
         private $authService;
+        private $imageService;
 
         public function __construct(){
             $this->jwtService = new JwtService("keyff");
             $this->userService = new UserService();
+            $this->imageService = new ImageService();
             $this->authService = new AuthService([]);
             $this->initRoutes();
         }
@@ -22,10 +24,13 @@
         }
 
         protected function postImage(){
-            $request_body = json_decode(file_get_contents('php://input'), true);
-            $image = new Image("url", "caption", 1, "[]", "date");
-            $image->create();
+            //$request_body = json_decode(file_get_contents('php://input'), true);
+            //$image = new Image("url", "caption", 1, "", "date");
+
+            $this->imageService->postImage();
+            //var_dump($request_body);
+            //$image->create();
+            echo json_encode(["code" => 200, "message"=>"ok"]);
         }
     }
-
 ?>
