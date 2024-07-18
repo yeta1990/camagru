@@ -3,10 +3,12 @@
 
         private $targetDir; 
         private $jwtService;
+        private $dbService;
 
         public function __construct(){
             $this->jwtService = new JwtService("keyff");
             $this->targetDir = "uploads/";
+            $this->dbService = new DbService();
         }
 
 
@@ -51,7 +53,25 @@
                 exit ;
                 
             }
+            return $uploadedFileName;
             
+        }
+
+
+        public function getFeed($page, $results_per_page){
+            $dbConnection = $this->dbService->getDb();
+            $offset = ($page - 1) * $results_per_page;
+            $query = "SELECT * FROM images ORDER BY id desc LIMIT :limit OFFSET :offset;";
+            $stmt = $dbConnection->prepare($query);
+            $stmt->bindValue(':limit', $results_per_page);
+            $stmt->bindValue(':offset', $offset);
+            $images = $stmt->execute();
+            $jsonArray = [];
+            while($row = $images->fetchArray(SQLITE3_ASSOC)) {
+                array_push($jsonArray, $row);
+            }
+            return $jsonArray;
+            //return $images->fetchArray(SQLITE3_NUM);
         }
     }
 ?>

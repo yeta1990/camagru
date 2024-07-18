@@ -11,6 +11,9 @@ class DbService {
         $this->db->close();
     }
     
+    public function getDb(){
+        return $this->db;
+    }
     public function query($query){
         return $this->db->prepare($query)->execute();
     }
