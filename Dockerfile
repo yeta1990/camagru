@@ -11,9 +11,6 @@ COPY /config/evasive.conf /etc/apache2/mods-enabled/evasive.conf
 RUN a2enmod rewrite
 RUN a2enmod evasive 
 
-
 WORKDIR /var/www/html/
-
-#USER marvin
 
 ENTRYPOINT ["bash", "config/config.sh"]

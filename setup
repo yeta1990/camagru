@@ -1,4 +1,5 @@
 sqlite3 db.db < config/create_user_table.sql
+sqlite3 db.db < config/create_images_table.sql
 
 
 env variables:

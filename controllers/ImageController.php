@@ -30,7 +30,7 @@
             $this->imageService->postImage();
             //var_dump($request_body);
             //$image->create();
-            echo json_encode(["code" => 200, "message"=>"ok"]);
+            echo json_encode(["code" => 200, "message"=>"okok"]);
         }
     }
 ?>

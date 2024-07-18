@@ -29,7 +29,7 @@
                 throw new ErrorException("File too large");
             }
             try {
-                var_dump ($_FILES["imageFile"]);
+                //var_dump ($_FILES["imageFile"]);
                 $check = getimagesize($_FILES["imageFile"]["tmp_name"]);
             }
             catch (ErrorException $th){
