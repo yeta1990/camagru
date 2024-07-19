@@ -61,7 +61,7 @@
         public function getFeed($page, $results_per_page){
             $dbConnection = $this->dbService->getDb();
             $offset = ($page - 1) * $results_per_page;
-            $query = "SELECT * FROM images ORDER BY id desc LIMIT :limit OFFSET :offset;";
+            $query = "SELECT url, caption, date, username from images a left join users b on a.user_id = b.id ORDER BY a.id desc LIMIT :limit OFFSET :offset;";
             $stmt = $dbConnection->prepare($query);
             $stmt->bindValue(':limit', $results_per_page);
             $stmt->bindValue(':offset', $offset);
@@ -71,7 +71,15 @@
                 array_push($jsonArray, $row);
             }
             return $jsonArray;
-            //return $images->fetchArray(SQLITE3_NUM);
+        }
+
+        public function getNumOfPages($results_per_page){
+            $dbConnection = $this->dbService->getDb();
+            $query = "SELECT count(*) as num_images FROM images;";
+            $stmt = $dbConnection->prepare($query);
+            $result = $stmt->execute();
+            $result = $result->fetchArray(SQLITE3_ASSOC);
+            return ceil($result["num_images"]/$results_per_page);
         }
     }
 ?>
