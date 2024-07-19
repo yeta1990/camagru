@@ -61,7 +61,7 @@
         public function getFeed($page, $results_per_page){
             $dbConnection = $this->dbService->getDb();
             $offset = ($page - 1) * $results_per_page;
-            $query = "SELECT url, caption, date, username from images a left join users b on a.user_id = b.id ORDER BY a.id desc LIMIT :limit OFFSET :offset;";
+            $query = "SELECT a.id, url, caption, date, username from images a left join users b on a.user_id = b.id ORDER BY a.id desc LIMIT :limit OFFSET :offset;";
             $stmt = $dbConnection->prepare($query);
             $stmt->bindValue(':limit', $results_per_page);
             $stmt->bindValue(':offset', $offset);
@@ -80,6 +80,31 @@
             $result = $stmt->execute();
             $result = $result->fetchArray(SQLITE3_ASSOC);
             return ceil($result["num_images"]/$results_per_page);
+        }
+
+        public function getImage($id){
+            $dbConnection = $this->dbService->getDb();
+            $query = "SELECT a.id, url, caption, date, username FROM images a left join users b on a.user_id = b.id where a.id = :id;";
+            $stmt = $dbConnection->prepare($query);
+            $stmt->bindValue(':id', $id);
+            $result = $stmt->execute();
+            $result = $result->fetchArray(SQLITE3_ASSOC);
+            return $result;
+        }
+
+        public function comment($comment, $image_id){
+
+            if ($this->getImage($image_id)){
+                $token = $this->jwtService->getBearerToken();
+                $userId = $this->jwtService->getUserId($token);
+                $comm = new Comment($comment, $userId, $image_id, time());
+                $comm->create();
+            }
+            else{
+                echo json_encode(["code" => 400, "message"=>"bad image id"]);
+                http_response_code(400);
+                exit;
+            }
         }
     }
 ?>

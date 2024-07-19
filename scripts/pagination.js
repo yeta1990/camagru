@@ -24,7 +24,7 @@ function getCurrentPage() {
 }
 
 async function fetchImages(page) {
-    const images = await authFetch(`/api/image?page=${page}&limit=${LIMIT_PAGE}`)
+    const images = await authFetch(`/api/image/feed?page=${page}&limit=${LIMIT_PAGE}`)
         .then(data => data)
         .catch(error => console.error('Error fetching images:', error));
     return images;

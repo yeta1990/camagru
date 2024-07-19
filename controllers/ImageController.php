@@ -10,7 +10,8 @@
         }
 
         protected function initRoutes() {
-            $this->addRoute('GET', 'api/image', 'getFeed');
+            $this->addRoute('GET', 'api/image/feed', 'getFeed');
+            $this->addRoute('GET', 'api/image', 'getImage');
             $this->addRoute('GET', 'api/image/pages', 'getNumOfPages');
             $this->addRoute('POST', 'api/image', 'postImage');
             $this->addRoute('POST', 'api/image/like', 'like');
@@ -50,6 +51,27 @@
                 exit;
             }
             echo json_encode($this->imageService->getNumOfPages($results_per_page));
+        }
+
+        protected function getImage(){
+            $queries = array();
+            parse_str($_SERVER['QUERY_STRING'], $queries);
+            if (array_key_exists("id", $queries)){
+                echo json_encode($this->imageService->getImage($queries["id"]));
+            }
+
+        }
+
+        protected function comment(){
+            $input_parsed = json_decode(file_get_contents('php://input'), true);
+            if (isset($input_parsed['image_id'], $input_parsed["comment"]) && strlen($input_parsed["comment"]) > 0 && strlen($input_parsed["comment"]) < 257) {
+                $this->imageService->comment($input_parsed['comment'], $input_parsed["image_id"]);
+                echo json_encode(["code" => 200, "message"=>"ok"]);
+            }
+            else {
+                echo json_encode(["code" => 400, "message"=>"error creating comment"]);
+                http_response_code(400);
+            }
         }
     }
 ?>
