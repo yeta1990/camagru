@@ -1,5 +1,5 @@
 
-const LIMIT_PAGE = 3;
+const LIMIT_PAGE = 5;
 
 function createPagination(totalPages) {
     
@@ -48,6 +48,9 @@ function setPostContent(post, image) {
     post.querySelector('.post-image').src = image.url;
     post.querySelector('.caption').textContent = image.caption;
     post.querySelector('.info').textContent = `${image.username} - ${new Date(image.date * 1000).toLocaleDateString()}`;
+
+    post.querySelector('.comment-button').href = `/image?id=${image.id}`;
+    post.querySelector('.view-comments-button').href = `/image?id=${image.id}`;
 }
 
 

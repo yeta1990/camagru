@@ -4,13 +4,45 @@ function getPostId() {
     return urlParams.get('id');
 }
 
+function createCommentElement() {
+    const commentTemplate = document.getElementById('commentTemplate').content;
+    return document.importNode(commentTemplate, true);
+}
+
+function displayComments(comments) {
+    var paras = document.getElementsByClassName('comments');
+
+    while(paras[0]) {
+        paras[0].parentNode.removeChild(paras[0]);
+    }
+
+    const commentsContainer = document.createElement('div');
+    commentsContainer.classList.add('comments');
+
+    comments.forEach(commentData => {
+        const comment = createCommentElement();
+        setCommentContent(comment, commentData);
+        commentsContainer.appendChild(comment);
+    });
+
+    postContainer.appendChild(commentsContainer);
+}
+
+
+function setCommentContent(comment, data) {
+    comment.querySelector('.comment-username').textContent = data.username;
+    comment.querySelector('.comment-text').textContent = data.comment;
+    comment.querySelector('.comment-date').textContent = new Date(data.date * 1000).toLocaleDateString() + ' - ' + new Date(data.date * 1000).toLocaleTimeString();
+}
+
 function fetchPost(id) {
     authFetch(`/api/image?id=${id}`)
+        .then(data => {if (data.id == undefined) throw new Error(""); return data})
         .then(data => {
             displayPost(data);
-            //displayComments(data.comments);
+            displayComments(data.comments);
         })
-        .catch(error => console.error('Error fetching post:', error));
+        .catch(error => window.location.replace("/feed"));
 }
 
 function setPostContent(post, data) {
@@ -37,7 +69,7 @@ document.getElementById('submitComment').addEventListener('click', submitComment
 document.addEventListener('DOMContentLoaded', () => {
 
     const postContainer = document.getElementById('postContainer');
-    const commentTemplate = document.getElementById('commentTemplate').content;
+    
     const postId = getPostId();
     fetchPost(postId);
 });
@@ -52,7 +84,6 @@ function submitComment() {
     } else {
         commentError.style.display = 'none';
 
-        console.log(commentText);
 
         const postId = getPostId();
         authFetch('/api/image/comment', {
@@ -63,17 +94,15 @@ function submitComment() {
             body: JSON.stringify({ "image_id": postId, "comment": commentText})
         })
         .then(data => {
-            /*document.getElementById("signupFeedback").textContent = "Created successfully. Before login, you must confirm your account, check your mail!";
-            document.getElementById("signupFeedback").style.visibility = "visible";
-            */
+            displayComments(data.comments);
+            document.getElementById('commentText').value = "";
+
         })
         .catch(error => {
             document.getElementById("commentError").textContent = error;
             document.getElementById("commentError").style.display= "block";
         });
         
-        // Aquí iría el código para enviar el comentario al backend.
-        console.log('Comentario enviado:', commentText);
     }
 }
 

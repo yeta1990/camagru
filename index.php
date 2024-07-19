@@ -19,7 +19,6 @@ function myAutoloader($className) {
 
 spl_autoload_register('myAutoloader');
 
-
 //basic auth check middleware\\
 $whitelistRoutes = [
     [
@@ -37,6 +36,14 @@ $whitelistRoutes = [
     [
         "path" => "api/user/recover",
         "method" => "POST"
+    ],
+    [
+        "path" => "api/image/feed",
+        "method" => "GET"
+    ],
+    [
+        "path" => "api/image/pages",
+        "method" => "GET"
     ]
 ];
 

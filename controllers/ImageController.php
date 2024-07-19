@@ -44,8 +44,8 @@
         protected function getNumOfPages(){
             $queries = array();
             parse_str($_SERVER['QUERY_STRING'], $queries);
-            $results_per_page= array_key_exists("limit", $queries) ? $queries["limit"] : 10;
-            if ($results_per_page < 1 || $results_per_page > 20){
+            $results_per_page= array_key_exists("limit", $queries) ? $queries["limit"] : 5;
+            if ($results_per_page < 5 || $results_per_page > 20){
                 echo json_encode(["code" => 400, "message"=>"what are you trying to do?"]);
                 http_response_code(400);
                 exit;
@@ -59,14 +59,13 @@
             if (array_key_exists("id", $queries)){
                 echo json_encode($this->imageService->getImage($queries["id"]));
             }
-
         }
 
         protected function comment(){
             $input_parsed = json_decode(file_get_contents('php://input'), true);
             if (isset($input_parsed['image_id'], $input_parsed["comment"]) && strlen($input_parsed["comment"]) > 0 && strlen($input_parsed["comment"]) < 257) {
-                $this->imageService->comment($input_parsed['comment'], $input_parsed["image_id"]);
-                echo json_encode(["code" => 200, "message"=>"ok"]);
+                $comments = $this->imageService->comment($input_parsed['comment'], $input_parsed["image_id"]);
+                echo json_encode(["code" => 200, "comments"=>$comments]);
             }
             else {
                 echo json_encode(["code" => 400, "message"=>"error creating comment"]);

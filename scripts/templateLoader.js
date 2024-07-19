@@ -19,7 +19,7 @@ function addHeaderFunctionality() {
     if (logoutButton) {
         logoutButton.addEventListener('click', () => {
             localStorage.removeItem('token');
-            window.location.href = '/login';
+            window.location.href = '/home';
         });
     }
 }

@@ -82,6 +82,19 @@
             return ceil($result["num_images"]/$results_per_page);
         }
 
+        public function getComments($image_id){
+            $dbConnection = $this->dbService->getDb();
+            $query = "SELECT a.date, a.comment, username FROM comments a left join users b on a.user_id = b.id where a.image_id = :id order by a.id desc;";
+            $stmt = $dbConnection->prepare($query);
+            $stmt->bindValue(':id', $image_id);
+            $result = $stmt->execute();
+            $jsonArray = [];
+            while($row = $result->fetchArray(SQLITE3_ASSOC)) {
+                array_push($jsonArray, $row);
+            }
+            return $jsonArray;
+        }
+
         public function getImage($id){
             $dbConnection = $this->dbService->getDb();
             $query = "SELECT a.id, url, caption, date, username FROM images a left join users b on a.user_id = b.id where a.id = :id;";
@@ -89,7 +102,13 @@
             $stmt->bindValue(':id', $id);
             $result = $stmt->execute();
             $result = $result->fetchArray(SQLITE3_ASSOC);
-            return $result;
+            if ($result){
+                $result["comments"] = $this->getComments($id);
+                return $result;
+            }
+            echo json_encode(["code" => 400, "message"=>"bad image id"]);
+            http_response_code(400);
+            exit;
         }
 
         public function comment($comment, $image_id){
@@ -99,6 +118,7 @@
                 $userId = $this->jwtService->getUserId($token);
                 $comm = new Comment($comment, $userId, $image_id, time());
                 $comm->create();
+                return $this->getComments($image_id);
             }
             else{
                 echo json_encode(["code" => 400, "message"=>"bad image id"]);

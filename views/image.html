@@ -45,6 +45,9 @@
         }
         .comment-form {
             margin-bottom: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
         }
         .comment-form textarea {
             width: 100%;
@@ -56,11 +59,15 @@
 </head>
 <body>
     <div id="headerContainer"></div>
-    <div id="postContainer"></div>
+    <div id="postContainer">
 
-    <textarea id="commentText" placeholder="Escribe un comentario..."></textarea>
-    <button id="submitComment">Enviar</button>
-    <div id="commentError" style="color: red; display: none;">El comentario debe tener entre 1 y 256 caracteres.</div>
+
+    </div>
+    <div class="comment-form">
+        <textarea id="commentText" placeholder="Escribe un comentario..."></textarea>
+        <button id="submitComment">Enviar</button>
+        <div id="commentError" style="color: red; display: none;">El comentario debe tener entre 1 y 256 caracteres.</div>
+    </div>
     <!-- Template for a post -->
     <div id="footerContainer"></div>
     <template id="postTemplate">
@@ -77,8 +84,10 @@
     <!-- Template for a comment -->
     <template id="commentTemplate">
         <div class="comment">
-            <div class="comment-username"></div>
+            <span class="comment-username"></span>
+            <span class="comment-date"></span>
             <div class="comment-text"></div>
+            
         </div>
     </template>
 

@@ -6,7 +6,7 @@ async function authFetch(url, options = {}, contentType = 'application/json') {
         //to do: check exp date from token. if expired, remove token and redirect to home
         headers['Authorization'] = `Bearer ${token}`;
         headers['Content-Type'] = contentType;
-    }else if(!["/home", "/signup"].includes(window.location.pathname)){
+    }else if(!["/home", "/signup", "/feed"].includes(window.location.pathname)){
         window.location.replace("/home");
     }
 
@@ -20,7 +20,7 @@ async function authFetch(url, options = {}, contentType = 'application/json') {
         .then(async data => {
             if (data.status == 401){
                 localStorage.removeItem('token');
-                window.location.replace("/home");
+                //window.location.replace("/home");
             }
             else if (data.status != 200){
                 const message = (await data["data"]).message;
