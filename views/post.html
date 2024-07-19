@@ -11,6 +11,10 @@
 
     <form id="uploadForm" enctype="multipart/form-data">
         <input type="file" id="imageFile" name="imageFile" accept="image/*" required>
+        <br>
+        Caption: <input type="text" id="caption" name="caption">
+        <br>
+        <br>
         <button type="submit">Upload image</button>
     </form>
 
@@ -34,6 +38,7 @@
             var formData = new FormData();
             var imageFile = document.getElementById('imageFile').files[0];
             formData.append('imageFile', imageFile);
+            formData.append('caption', document.getElementById("caption").value);
 
             fetch('/api/image', {
                 method: 'POST',

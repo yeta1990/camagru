@@ -20,7 +20,7 @@
 
         protected function postImage(){
             $imageName = $this->imageService->postImage();
-            $image = new Image($imageName, "caption", 1, "", time());
+            $image = new Image($imageName, $_POST["caption"], 1, "", time());
 
             $image->create();
             echo json_encode(["code" => 200, "message"=>"ok"]);
