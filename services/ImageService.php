@@ -126,5 +126,56 @@
                 exit;
             }
         }
+
+        public function like($image_id){
+            if ($this->getImage($image_id)){
+                $dbConnection = $this->dbService->getDb();
+                $token = $this->jwtService->getBearerToken();
+                $userId = $this->jwtService->getUserId($token);
+                $query = "UPDATE images SET 
+                likes = 
+                    case 
+                        when length(likes) = 0 then :userId || ','
+                        when instr(likes, :userId) > 0 then replace(likes, :userId || ',', '')
+                    else likes || :userId || ','
+                    end
+                WHERE id = :id";
+                $stmt = $dbConnection->prepare($query);
+                $stmt->bindValue(':userId', $userId);
+                $stmt->bindValue(':id', $image_id);
+                $result = $stmt->execute();
+
+                $query = "SELECT likes FROM images a where id = :id;";
+                $stmt = $dbConnection->prepare($query);
+                $stmt->bindValue(':id', $image_id);
+                $result = $stmt->execute();
+                $likes = trim($result->fetchArray(SQLITE3_ASSOC)["likes"], ',');
+                var_dump($likes);
+                
+
+                $query = "SELECT username from users a where a.id in ($likes);";
+                echo $query;
+                //$stmt->bindValue(':id', $image_id);
+                //$query = "SELECT username from users a where a.id in (select trim(likes, ',') as likes from images b where b.id = :id);";
+                $stmt = $dbConnection->prepare($query);
+                //$stmt->bindValue(':id', $image_id);
+                $result = $stmt->execute();
+                $likes = $result->fetchArray(SQLITE3_ASSOC)["username"];
+                var_dump($likes);
+
+                $jsonArray = [];
+                while($row = $result->fetchArray(SQLITE3_ASSOC)["username"]) {
+                    array_push($jsonArray, $row);
+                }
+                var_dump($jsonArray);
+                return $jsonArray;
+            }
+            else{
+                echo json_encode(["code" => 400, "message"=>"bad image id"]);
+                http_response_code(400);
+                exit;
+            }
+            
+        }
     }
 ?>

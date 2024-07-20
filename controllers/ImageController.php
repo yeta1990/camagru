@@ -72,5 +72,19 @@
                 http_response_code(400);
             }
         }
+
+        protected function like(){
+            $input_parsed = json_decode(file_get_contents('php://input'), true);
+            var_dump ($input_parsed);
+            if (isset($input_parsed['image_id'])) {
+                $likes = $this->imageService->like($input_parsed['image_id']);
+                echo json_encode(["code" => 200, "likes"=>$likes]);
+            }
+            else {
+                echo json_encode(["code" => 400, "message"=>"error creating comment"]);
+                http_response_code(400);
+            }
+
+        }
     }
 ?>
