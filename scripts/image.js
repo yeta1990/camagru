@@ -42,34 +42,14 @@ function fetchPost(id) {
             displayPost(data);
             displayComments(data.comments);
         })
-        .catch(error => window.location.replace("/feed"));
+        .catch(error => console.log(error)/*window.location.replace("/feed")*/);
 }
 
-function setPostContent(post, data) {
-    post.querySelector('.post-image').src = data.url;
-    post.querySelector('.caption').textContent = data.caption;
-    post.querySelector('.info').textContent = `${data.username} - ${new Date(data.date * 1000).toLocaleDateString()}`;
-}
-
-function createPostElement() {
-    const postTemplate = document.getElementById('postTemplate').content;
-    return document.importNode(postTemplate, true);
-}
-
-function displayPost(data) {
-    const post = createPostElement();
-    setPostContent(post, data);
-
-    postContainer.appendChild(post);
-
-}
 
 document.getElementById('submitComment').addEventListener('click', submitComment);
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    const postContainer = document.getElementById('postContainer');
-    
     const postId = getPostId();
     fetchPost(postId);
 });

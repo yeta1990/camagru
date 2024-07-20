@@ -3,41 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Feed</title>
-    <style>
-        #feedContainer {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .post {
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-        }
-        .post img {
-            display: block;
-            margin-bottom: 10px;
-            max-width: 100%;
-            max-height: 500px;
-            width: auto;
-            margin: 0 auto;
-        }
-        .post .caption {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .post .info {
-            font-size: 0.9em;
-            color: #555;
-            margin-bottom: 10px;
-        }
-        .post .actions {
-            margin-bottom: 10px;
-        }
-        .post .actions button {
-            margin-right: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="../styles/image.css">
+    <link rel="stylesheet" href="../styles/comments.css">
     <script src="/scripts/authFetch.js" defer></script>
 </head>
 <body>
@@ -45,7 +12,7 @@
     <h1>Feed</h1>
 
 
-    <div id="feedContainer"></div>
+    <div id="postContainer"></div>
     <template id="postTemplate">
         <div class="post">
             <img class="post-image" src="" alt="Image">
@@ -53,7 +20,6 @@
             <div class="info"></div>
             <div class="actions">
                 <button class="like-button">Like</button>
-                <a href="#" class="comment-button">Dejar comentario</a>
                 <a href="#" class="view-comments-button">Ver comentarios</a>
             </div>
         </div>
@@ -63,5 +29,6 @@
     <div id="footerContainer"></div>
     <script src="/scripts/templateLoader.js"></script>
     <script src="/scripts/pagination.js"></script>
+    <script src="/scripts/post.js"></script>
 </body>
 </html>

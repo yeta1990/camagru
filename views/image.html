@@ -5,56 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ver Post</title>
     <script src="/scripts/authFetch.js" defer></script>
-    <style>
-        #postContainer {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .post {
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-        }
-        .post img {
-            width: 100%;
-            display: block;
-            margin-bottom: 10px;
-        }
-        .post .caption {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .post .info {
-            font-size: 0.9em;
-            color: #555;
-            margin-bottom: 10px;
-        }
-        .post .actions {
-            margin-bottom: 10px;
-        }
-        .post .actions button {
-            margin-right: 10px;
-        }
-        .comments {
-            margin-top: 20px;
-        }
-        .comment {
-            border-bottom: 1px solid #eee;
-            padding: 10px 0;
-        }
-        .comment-form {
-            margin-bottom: 20px;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .comment-form textarea {
-            width: 100%;
-            height: 80px;
-            margin-bottom: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="../styles/image.css">
+    <link rel="stylesheet" href="../styles/comments.css">
     <script src="/scripts/templateLoader.js"></script>
 </head>
 <body>
@@ -68,7 +20,7 @@
         <button id="submitComment">Enviar</button>
         <div id="commentError" style="color: red; display: none;">El comentario debe tener entre 1 y 256 caracteres.</div>
     </div>
-    <!-- Template for a post -->
+
     <div id="footerContainer"></div>
     <template id="postTemplate">
         <div class="post">
@@ -77,11 +29,11 @@
             <div class="info"></div>
             <div class="actions">
                 <button class="like-button">Like</button>
+                <a href="#" class="view-comments-button">Ver comentarios</a>
             </div>
         </div>
     </template>
 
-    <!-- Template for a comment -->
     <template id="commentTemplate">
         <div class="comment">
             <span class="comment-username"></span>
@@ -92,5 +44,6 @@
     </template>
 
     <script src="scripts/image.js"></script>
+    <script src="scripts/post.js"></script>
 </body>
 </html>

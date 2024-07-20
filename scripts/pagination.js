@@ -1,4 +1,5 @@
 
+
 const LIMIT_PAGE = 5;
 
 function createPagination(totalPages) {
@@ -31,14 +32,13 @@ async function fetchImages(page) {
 }
 
 function displayImages(images) {
-    feedContainer.innerHTML = '';
+    postContainer.innerHTML = '';
     images.forEach(image => {
-        const post = createPostElement();
-        setPostContent(post, image);
-        feedContainer.appendChild(post);
+        displayPost(image);
     });
 }
 
+/*
 function createPostElement() {
     const postTemplate = document.getElementById('postTemplate').content;
     return document.importNode(postTemplate, true);
@@ -52,6 +52,7 @@ function setPostContent(post, image) {
     post.querySelector('.comment-button').href = `/image?id=${image.id}`;
     post.querySelector('.view-comments-button').href = `/image?id=${image.id}`;
 }
+    */
 
 
 document.addEventListener('DOMContentLoaded', async () => {
