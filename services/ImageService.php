@@ -145,29 +145,21 @@
                 $stmt->bindValue(':id', $image_id);
                 $result = $stmt->execute();
 
+
+                /* get likes */
                 $query = "SELECT likes FROM images a where id = :id;";
                 $stmt = $dbConnection->prepare($query);
                 $stmt->bindValue(':id', $image_id);
                 $result = $stmt->execute();
                 $likes = trim($result->fetchArray(SQLITE3_ASSOC)["likes"], ',');
-                var_dump($likes);
-                
 
                 $query = "SELECT username from users a where a.id in ($likes);";
-                echo $query;
-                //$stmt->bindValue(':id', $image_id);
-                //$query = "SELECT username from users a where a.id in (select trim(likes, ',') as likes from images b where b.id = :id);";
                 $stmt = $dbConnection->prepare($query);
-                //$stmt->bindValue(':id', $image_id);
                 $result = $stmt->execute();
-                $likes = $result->fetchArray(SQLITE3_ASSOC)["username"];
-                var_dump($likes);
-
                 $jsonArray = [];
-                while($row = $result->fetchArray(SQLITE3_ASSOC)["username"]) {
-                    array_push($jsonArray, $row);
+                while($res = $result->fetchArray(SQLITE3_ASSOC)){
+                    array_push($jsonArray, $res["username"]);
                 }
-                var_dump($jsonArray);
                 return $jsonArray;
             }
             else{
