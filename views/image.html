@@ -21,6 +21,7 @@
         <div id="commentError" style="color: red; display: none;">El comentario debe tener entre 1 y 256 caracteres.</div>
     </div>
 
+    <button class="like-button" id="sendLike">Like</button>
     <div id="footerContainer"></div>
     <template id="postTemplate">
         <div class="post">
@@ -28,9 +29,10 @@
             <div class="caption"></div>
             <div class="info"></div>
             <div class="actions">
-                <button class="like-button">Like</button>
+                <button class="like-button" id="sendLike">Like</button>
                 <a href="#" class="view-comments-button">Ver comentarios</a>
             </div>
+            <div class="likes-container"></div>
         </div>
     </template>
 
@@ -42,8 +44,8 @@
             
         </div>
     </template>
-
     <script src="scripts/image.js"></script>
     <script src="scripts/post.js"></script>
+
 </body>
 </html>

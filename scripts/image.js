@@ -46,7 +46,6 @@ function fetchPost(id) {
 }
 
 
-document.getElementById('submitComment').addEventListener('click', submitComment);
 
 document.addEventListener('DOMContentLoaded', () => {
 

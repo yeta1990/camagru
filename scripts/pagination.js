@@ -38,23 +38,6 @@ function displayImages(images) {
     });
 }
 
-/*
-function createPostElement() {
-    const postTemplate = document.getElementById('postTemplate').content;
-    return document.importNode(postTemplate, true);
-}
-
-function setPostContent(post, image) {
-    post.querySelector('.post-image').src = image.url;
-    post.querySelector('.caption').textContent = image.caption;
-    post.querySelector('.info').textContent = `${image.username} - ${new Date(image.date * 1000).toLocaleDateString()}`;
-
-    post.querySelector('.comment-button').href = `/image?id=${image.id}`;
-    post.querySelector('.view-comments-button').href = `/image?id=${image.id}`;
-}
-    */
-
-
 document.addEventListener('DOMContentLoaded', async () => {
 
     const totalPages = await authFetch(`/api/image/pages?limit=${LIMIT_PAGE}`)

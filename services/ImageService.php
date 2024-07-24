@@ -68,6 +68,7 @@
             $images = $stmt->execute();
             $jsonArray = [];
             while($row = $images->fetchArray(SQLITE3_ASSOC)) {
+                $row["likes"] = $this->getLikesUsernames($row["id"]);
                 array_push($jsonArray, $row);
             }
             return $jsonArray;
@@ -104,6 +105,7 @@
             $result = $result->fetchArray(SQLITE3_ASSOC);
             if ($result){
                 $result["comments"] = $this->getComments($id);
+                $result["likes"] = $this->getLikesUsernames($id);
                 return $result;
             }
             echo json_encode(["code" => 400, "message"=>"bad image id"]);
@@ -127,6 +129,26 @@
             }
         }
 
+        private function getLikesUsernames($image_id){
+
+            $dbConnection = $this->dbService->getDb();
+            $query = "SELECT likes FROM images a where id = :id;";
+            $stmt = $dbConnection->prepare($query);
+            $stmt->bindValue(':id', $image_id);
+            $result = $stmt->execute();
+            $likes = trim($result->fetchArray(SQLITE3_ASSOC)["likes"], ',');
+
+            $query = "SELECT username from users a where a.id in ($likes);";
+            $stmt = $dbConnection->prepare($query);
+            $result = $stmt->execute();
+            $jsonArray = [];
+            while($res = $result->fetchArray(SQLITE3_ASSOC)){
+                array_push($jsonArray, $res["username"]);
+            }
+            return $jsonArray;
+
+        }
+
         public function like($image_id){
             if ($this->getImage($image_id)){
                 $dbConnection = $this->dbService->getDb();
@@ -147,20 +169,8 @@
 
 
                 /* get likes */
-                $query = "SELECT likes FROM images a where id = :id;";
-                $stmt = $dbConnection->prepare($query);
-                $stmt->bindValue(':id', $image_id);
-                $result = $stmt->execute();
-                $likes = trim($result->fetchArray(SQLITE3_ASSOC)["likes"], ',');
-
-                $query = "SELECT username from users a where a.id in ($likes);";
-                $stmt = $dbConnection->prepare($query);
-                $result = $stmt->execute();
-                $jsonArray = [];
-                while($res = $result->fetchArray(SQLITE3_ASSOC)){
-                    array_push($jsonArray, $res["username"]);
-                }
-                return $jsonArray;
+                $likesUsernames = $this->getLikesUsernames($image_id);
+                return $likesUsernames;
             }
             else{
                 echo json_encode(["code" => 400, "message"=>"bad image id"]);
