@@ -5,6 +5,8 @@ function setPostContent(post, data) {
     post.querySelector('.info').textContent = `${data.username} - ${new Date(data.date * 1000).toLocaleDateString()}`;
 
     post.querySelector('.view-comments-button').href = `/image?id=${data.id}`;
+    const postElement = post.querySelector('.post');
+    postElement.setAttribute('data-post-id', data.id);
 }
 
 function createPostElement() {
@@ -27,7 +29,8 @@ function displayLikes(likes, postElement) {
 function submitLike(event) {
 
         const postElement = event.target.closest('.post');
-        const postId = getPostId();
+        const postId = postElement.getAttribute('data-post-id');
+
         authFetch('/api/image/like', {
             method: 'POST',
             headers: {
@@ -48,6 +51,7 @@ function submitLike(event) {
 function displayPost(data) {
     const post = createPostElement();
     setPostContent(post, data);
+
     const likeButton = post.querySelector('.like-button');
     console.log(data.likes);
     displayLikes(data.likes, post);
