@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../styles/image.css">
     <link rel="stylesheet" href="../styles/comments.css">
     <script src="/scripts/authFetch.js" defer></script>
+    <script src="https://kit.fontawesome.com/2db25d6296.js" crossorigin="anonymous"></script> 
 </head>
 <body>
     <div id="headerContainer"></div>
@@ -19,10 +20,15 @@
             <div class="caption"></div>
             <div class="info"></div>
             <div class="actions">
-                <button class="like-button">Like</button>
-                <a href="#" class="view-comments-button">Ver comentarios</a>
+                <span class="like-button" id="sendLike">
+                    <i class="fa-regular fa-heart"></i>
+                </span>
+                <span class="likes-container"></span>
+                <div>
+                    <a href="#" class="view-comments-button">Ver comentarios</a>
+                </div>
             </div>
-            <div class="likes-container"></div>
+            
         </div>
     </template>
 

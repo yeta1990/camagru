@@ -4,11 +4,13 @@
         private $targetDir; 
         private $jwtService;
         private $dbService;
+        private $userService;
 
         public function __construct(){
             $this->jwtService = new JwtService("keyff");
             $this->targetDir = "uploads/";
             $this->dbService = new DbService();
+            $this->userService = new UserService();
         }
 
 
@@ -131,6 +133,8 @@
 
         private function getLikesUsernames($image_id){
 
+            $token = $this->jwtService->getBearerToken();
+            $userId = $this->jwtService->getUserId($token);
             $dbConnection = $this->dbService->getDb();
             $query = "SELECT likes FROM images a where id = :id;";
             $stmt = $dbConnection->prepare($query);
@@ -141,9 +145,15 @@
             $query = "SELECT username from users a where a.id in ($likes);";
             $stmt = $dbConnection->prepare($query);
             $result = $stmt->execute();
+
+            $userName = $this->userService->getUserById($userId)->getObjectVars()["username"];
             $jsonArray = [];
             while($res = $result->fetchArray(SQLITE3_ASSOC)){
-                array_push($jsonArray, $res["username"]);
+                if ($res["username"] == $userName) {
+                    array_push($jsonArray, "you");
+                }else {
+                    array_push($jsonArray, $res["username"]);
+                }
             }
             return $jsonArray;
 

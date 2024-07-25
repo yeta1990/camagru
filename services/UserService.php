@@ -25,6 +25,9 @@
         }
 
         public function isUsernameAvailable($username){
+            if ($username == "you"){
+                return false;
+            }
             $num_users = $this->db->query("SELECT count(*) as count from users where username = \"{$username}\"")->fetchArray();
             if (strlen($username) > 1 && strlen($username) < 256 && $num_users["count"] == 0){
                 return true;
