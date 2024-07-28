@@ -3,9 +3,13 @@
     class ImageController extends Controller{
 
         private $imageService;
+        private $userService;
+        private $jwtService;
 
         public function __construct(){
+            $this->jwtService = new JwtService("keyff");
             $this->imageService = new ImageService();
+            $this->userService = new UserService();
             $this->initRoutes();
         }
 
@@ -64,7 +68,17 @@
         protected function comment(){
             $input_parsed = json_decode(file_get_contents('php://input'), true);
             if (isset($input_parsed['image_id'], $input_parsed["comment"]) && strlen($input_parsed["comment"]) > 0 && strlen($input_parsed["comment"]) < 257) {
-                $comments = $this->imageService->comment($input_parsed['comment'], $input_parsed["image_id"]);
+                $token = $this->jwtService->getBearerToken();
+                $userId = $this->jwtService->getUserId($token);
+                $comments = $this->imageService->comment($userId, $input_parsed['comment'], $input_parsed["image_id"]);
+                $commenterUser = $this->userService->getUserById($userId)->getObjectVars();
+                $image = $this->imageService->getImage($input_parsed["image_id"]);
+                $imageOwnerUser = $this->userService->getUserById($image["user_id"])->getObjectVars();
+                MailService::send(
+                    $imageOwnerUser['email'],
+                    $imageOwnerUser['username'],
+                    'camagru-albgarci: You have a new comment',
+                    'You have a new comment from '. $commenterUser["username"] .' : <a href="http://localhost:8080/image?id=' . $input_parsed["image_id"]. '">View comment</a>');
                 echo json_encode(["code" => 200, "comments"=>$comments]);
             }
             else {

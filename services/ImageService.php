@@ -100,7 +100,7 @@
 
         public function getImage($id){
             $dbConnection = $this->dbService->getDb();
-            $query = "SELECT a.id, url, caption, date, username FROM images a left join users b on a.user_id = b.id where a.id = :id;";
+            $query = "SELECT a.id, url, caption, date, username, a.user_id FROM images a left join users b on a.user_id = b.id where a.id = :id;";
             $stmt = $dbConnection->prepare($query);
             $stmt->bindValue(':id', $id);
             $result = $stmt->execute();
@@ -115,11 +115,9 @@
             exit;
         }
 
-        public function comment($comment, $image_id){
+        public function comment($userId, $comment, $image_id){
 
             if ($this->getImage($image_id)){
-                $token = $this->jwtService->getBearerToken();
-                $userId = $this->jwtService->getUserId($token);
                 $comm = new Comment($comment, $userId, $image_id, time());
                 $comm->create();
                 return $this->getComments($image_id);
@@ -146,16 +144,19 @@
             $stmt = $dbConnection->prepare($query);
             $result = $stmt->execute();
 
-            $userName = $this->userService->getUserById($userId)->getObjectVars()["username"];
-            $jsonArray = [];
-            while($res = $result->fetchArray(SQLITE3_ASSOC)){
-                if ($res["username"] == $userName) {
-                    array_push($jsonArray, "you");
-                }else {
-                    array_push($jsonArray, $res["username"]);
+            if ($userId){
+                $userName = $this->userService->getUserById($userId)->getObjectVars()["username"];
+                $jsonArray = [];
+                while($res = $result->fetchArray(SQLITE3_ASSOC)){
+                    if ($res["username"] == $userName) {
+                        array_push($jsonArray, "you");
+                    }else {
+                        array_push($jsonArray, $res["username"]);
+                    }
                 }
+                return $jsonArray;
             }
-            return $jsonArray;
+            return [""];
 
         }
 

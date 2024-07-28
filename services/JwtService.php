@@ -59,7 +59,10 @@ class JwtService {
     }
 
     public function getUserId($token){
-        return json_decode($this->getDecodedToken($token), true)["user_id"];
+        if ($token){
+            return json_decode($this->getDecodedToken($token), true)["user_id"];
+        }
+        return false;
     }
 
     public function getDecodedToken($token){

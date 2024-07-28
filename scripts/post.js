@@ -20,6 +20,9 @@ function transformLikesText(likes){
     if (likes.length == 0){
         return "Nobody likes this image."
     }
+    else if (likes.length == 1 && likes[0] == ""){
+        return "Log in to see who likes this image."
+    }
     let likesText = ""; 
 
     let hasUserLiked = false;
