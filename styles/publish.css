@@ -1,0 +1,14 @@
+.publishMainContainer{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.publishMain{
+    min-width: 500px;
+}
+
+
+
+.publishSide{
+}

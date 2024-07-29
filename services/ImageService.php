@@ -115,6 +115,19 @@
             exit;
         }
 
+        public function getImageByUserId($user_id){
+            $dbConnection = $this->dbService->getDb();
+            $query = "SELECT a.id, url, caption, date FROM images a where a.user_id = :user_id;";
+            $stmt = $dbConnection->prepare($query);
+            $stmt->bindValue(':user_id', $user_id);
+            $result = $stmt->execute();
+            $result = $result->fetchArray(SQLITE3_ASSOC);
+            if ($result){
+                return $result;
+            }
+            return [];
+        }
+
         public function comment($userId, $comment, $image_id){
 
             if ($this->getImage($image_id)){

@@ -63,6 +63,18 @@
             if (array_key_exists("id", $queries)){
                 echo json_encode($this->imageService->getImage($queries["id"]));
             }
+            else {
+                $token = $this->jwtService->getBearerToken();
+                $userId = $this->jwtService->getUserId($token);
+                if ($userId){
+                    echo json_encode($this->imageService->getImageByUserId($userId));
+                }
+                else {
+                    echo json_encode(["code" => 403, "message"=>"forbidden"]);
+                    http_response_code(403);
+                    exit ;
+                }
+            }
         }
 
         protected function comment(){
