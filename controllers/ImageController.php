@@ -28,7 +28,27 @@
             $image = new Image($imageName, $_POST["caption"], 1, "", time());
 
             $image->create();
-            echo json_encode(["code" => 200, "message"=>"ok"]);
+            $token = $this->jwtService->getBearerToken();
+            $userId = $this->jwtService->getUserId($token);
+            echo json_encode($this->imageService->getImageByUserId($userId));
+        }
+
+        protected function deleteImage(){
+
+            $input_parsed = json_decode(file_get_contents('php://input'), true);
+            if (isset($input_parsed['image_id'])) {
+                $token = $this->jwtService->getBearerToken();
+                $userId = $this->jwtService->getUserId($token);
+                $image = $this->imageService->getImage($input_parsed["image_id"]);
+                if ($image["user_id"] != $userId){
+                    echo json_encode(["code" => 403, "message"=>"forbidden"]);
+                    http_response_code(403);
+                    exit ;
+                }
+                $this->imageService->deleteImage($input_parsed["image_id"]);
+                echo json_encode($this->imageService->getImageByUserId($userId));
+                exit;
+            }
         }
 
         protected function getFeed(){

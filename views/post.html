@@ -5,6 +5,7 @@
     <title>Edit User</title>
     <script src="/scripts/authFetch.js" defer></script>
     <link rel="stylesheet" href="../styles/publish.css">
+    <link rel="stylesheet" href="../styles/modal.css">
     <script>
 
         const token = localStorage.getItem('token');
@@ -18,11 +19,12 @@
 <body>
     <div id="headerContainer"></div>
     
-        <div><h1>Post image</h1>
-        </div>
 
     <div class="publishMainContainer">
+        
+        
         <div class="publishMain">
+        <h1>Post image</h1>
             <form id="uploadForm" enctype="multipart/form-data">
                 <input type="file" id="imageFile" name="imageFile" accept="image/*" required>
                 <br>
@@ -34,12 +36,35 @@
 
             <span style="visibility: hidden;" id="formFeedback"></span>
         </div>
-        <div class="publishSide">
-            eo
+        <br>
+        <br>
+        
+        <div>
+            <h1>My published images</h1>
+            <div id="publishSide">
+            </div>
         </div>
 
     </div>
     <div id="footerContainer"></div>
+    <template id="imageForSidebar">
+        <div class="sidebar-post">
+            <img class="sidebar-img" src="" />
+            <div class="sidebar-actions">
+                <button class="delete-button" id="deleteImage">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </template>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modalText"></p>
+            <img src="" id="modalImg"><br>
+            <button id="confirmBtn">Confirm</button>
+        </div>
+    </div>
     <script src="/scripts/templateLoader.js"></script>
     <script>
 
@@ -64,11 +89,13 @@
                 method: 'POST',
                 headers,
                 body: formData
-            })//, 'multipart/form-data')
+            })
+            .then(response => response.json())
             .then(data => {
                 document.getElementById("formFeedback").textContent = "Upload successfully";
                 document.getElementById("formFeedback").style.visibility= "visible";
                 console.log(data);
+                displayMyImages(data);
             })
             .catch(error => {
                 document.getElementById("formFeedback").textContent = error;

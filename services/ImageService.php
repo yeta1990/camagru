@@ -98,6 +98,14 @@
             return $jsonArray;
         }
 
+        public function deleteImage($id){
+            $dbConnection = $this->dbService->getDb();
+            $query = "DELETE FROM images where id = :id";
+            $stmt = $dbConnection->prepare($query);
+            $stmt->bindValue(':id', $id);
+            $stmt->execute();
+        }
+
         public function getImage($id){
             $dbConnection = $this->dbService->getDb();
             $query = "SELECT a.id, url, caption, date, username, a.user_id FROM images a left join users b on a.user_id = b.id where a.id = :id;";
@@ -117,15 +125,15 @@
 
         public function getImageByUserId($user_id){
             $dbConnection = $this->dbService->getDb();
-            $query = "SELECT a.id, url, caption, date FROM images a where a.user_id = :user_id;";
+            $query = "SELECT a.id, url, caption, date FROM images a where a.user_id = :user_id order by id desc;";
             $stmt = $dbConnection->prepare($query);
             $stmt->bindValue(':user_id', $user_id);
             $result = $stmt->execute();
-            $result = $result->fetchArray(SQLITE3_ASSOC);
-            if ($result){
-                return $result;
+            $jsonArray = [];
+            while($row = $result->fetchArray(SQLITE3_ASSOC)) {
+                array_push($jsonArray, $row);
             }
-            return [];
+            return $jsonArray;
         }
 
         public function comment($userId, $comment, $image_id){
