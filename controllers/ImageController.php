@@ -18,6 +18,7 @@
             $this->addRoute('GET', 'api/image', 'getImage');
             $this->addRoute('GET', 'api/image/pages', 'getNumOfPages');
             $this->addRoute('POST', 'api/image', 'postImage');
+            $this->addRoute('GET', 'api/image/merge', 'mergeImages');
             $this->addRoute('POST', 'api/image/like', 'like');
             $this->addRoute('POST', 'api/image/comment', 'comment');
             $this->addRoute('DELETE', 'api/image', 'deleteImage');
@@ -130,6 +131,11 @@
                 http_response_code(400);
             }
 
+        }
+
+        protected function mergeImages(){
+            header('content-type: image/png');
+            $this->imageService->mergeImages();
         }
     }
 ?>

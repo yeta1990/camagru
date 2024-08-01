@@ -211,5 +211,36 @@
             }
             
         }
+
+        private function imageMergeAlpha($back_image, $watermark_img, $dst_x, $dst_y, $src_x, $src_y){
+            $src_opacity = 100;
+            $watermark_w = imagesx($watermark_img);
+            $watermark_h = imagesy($watermark_img);
+
+            $dst_im = imagecreatetruecolor($watermark_w,$watermark_h);
+            $dst_im = imagecreatefromjpeg($back_image);
+            
+            $canvas = imagecreatetruecolor($watermark_w, $watermark_h);
+            imagecopy($canvas, $dst_im, 0, 0, $dst_x, $dst_y, $watermark_w, $watermark_h);
+            imagecopy($canvas, $watermark_img, 0, 0, $src_x, $src_y, $watermark_w, $watermark_h);
+            imagecopymerge($dst_im, $canvas, $dst_x, $dst_y, 0, 0, $watermark_w, $watermark_h, $src_opacity);
+            return $dst_im;
+        }
+
+        public function mergeImages(){
+            //$token = $this->jwtService->getBearerToken();
+            //$userId = $this->jwtService->getUserId($token);
+            $userId = 1;
+            $imageFileType = 'png';
+            $fileNameToSave =  $userId . '-' . time() . '.' . $imageFileType;
+            $targetFile = $this->targetDir . $fileNameToSave;
+
+            $back_image='assets/b.jpg';
+            $watermark = imagecreatefrompng('assets/dog.png');
+            
+            $image = $this->imageMergeAlpha($back_image, $watermark, 0, 0, 0, 0);
+            imagepng($image, $targetFile);
+            return imagepng($image);
+        }
     }
 ?>

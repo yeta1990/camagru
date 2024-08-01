@@ -44,6 +44,10 @@ $whitelistRoutes = [
     [
         "path" => "api/image/pages",
         "method" => "GET"
+    ],
+    [
+        "path" => "api/image/merge",
+        "method" => "GET"
     ]
 ];
 
