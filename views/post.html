@@ -19,10 +19,36 @@
 <body>
     <div id="headerContainer"></div>
     
+    <br>
+    <br>
+    <div class="camContainer">
+        <div class="watermark">
+            <img src="/assets/dog.png" id="watermark-display"/>
+        </div>
+        <div class="cam">
+
+        </div>
+
+    </div>
+
+    <div class="watermark-container">
+        <div class="watermark-img" id="dog">
+            <img src="/assets/dog.png" />
+        </div>
+        <div class="watermark-img" id="cat">
+            <img src="/assets/cat.png" style="top:50%"/>
+        </div>
+        <div class="watermark-img" id="sloth">
+            <img src="/assets/sloth.png" />
+        </div>
+    </div>
+    <br>
+    <br>
 
     <div class="publishMainContainer">
         
         
+
         <div class="publishMain">
         <h1>Post image</h1>
             <form id="uploadForm" enctype="multipart/form-data">
@@ -67,6 +93,24 @@
     </div>
     <script src="/scripts/templateLoader.js"></script>
     <script>
+
+        document.getElementById('cat').addEventListener("click", function(event){
+
+            const src = document.getElementById("cat").firstElementChild.src
+            document.getElementById("watermark-display").src = src;
+        })
+
+        document.getElementById('dog').addEventListener("click", function(event){
+
+            const src = document.getElementById("dog").firstElementChild.src
+            document.getElementById("watermark-display").src = src;
+        })
+
+        document.getElementById('sloth').addEventListener("click", function(event){
+
+            const src = document.getElementById("sloth").firstElementChild.src
+            document.getElementById("watermark-display").src = src;
+        })
 
         document.getElementById('uploadForm').addEventListener('submit', function(event) {
 

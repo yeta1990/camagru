@@ -58,3 +58,39 @@
 .sidebar-img {
     max-width: 150px;
 }
+
+.camContainer {
+    position: relative;
+    width: 800px;
+    height: 800px;
+}
+
+.watermark {
+    position:absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.cam {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: cadetblue;
+    width: 100%;
+    height: 100%;
+}
+
+.watermark-container {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+}
+
+.watermark-img img{
+    position: relative;
+}
+
+.watermark-img img{
+    width: 300px;
+}
