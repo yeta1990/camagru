@@ -6,6 +6,7 @@
     <script src="/scripts/authFetch.js" defer></script>
     <link rel="stylesheet" href="../styles/publish.css">
     <link rel="stylesheet" href="../styles/modal.css">
+    <link rel="stylesheet" href="../styles/cam.css">
     <script>
 
         const token = localStorage.getItem('token');
@@ -25,11 +26,38 @@
         <div class="watermark">
             <img src="/assets/dog.png" id="watermark-display"/>
         </div>
-        <div class="cam">
-
+        <div class="camera">
+          <video id="video">Video stream not available.</video>
         </div>
+        <canvas class="cam" id="canvas"> </canvas>
+        
+        
+    </div>
+    <div id="take" class="take">
+      <button id="startbutton" class="cameraButtons">Take photo</button>
+      <button id="takeanother" class="cameraButtons">Take another photo</button>
+      <button id="publish" class="cameraButtons">Publish</button>
+    </div>
+
+
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+<!--
+    <div class="camContainer">
+        <div class="watermark">
+            <img src="/assets/dog.png" id="watermark-display"/>
+        </div>
+        <canvas class="cam" id="canvas"> </canvas>
 
     </div>
+-->
 
     <div class="watermark-container">
         <div class="watermark-img" id="dog">
@@ -148,5 +176,6 @@
         });
     </script>
     <script src="scripts/myImages.js"></script>
+    <script src="scripts/cam.js"></script>
 </body>
 </html>
