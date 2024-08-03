@@ -1,6 +1,6 @@
 (() => {
   
-    const width = 800; 
+    const width = 600; 
     let height = 0; 
   
     let streaming = false;
@@ -10,10 +10,28 @@
     let startbutton = null;
     let takeAnotherButton = null;
     let publishButton = null;
+    let camContainer = null
+    
   
+    function updateCanvasSize() {
+      height = video.videoHeight / (video.videoWidth / width);
+  
+      if (isNaN(height)) {
+        height = width / (4 / 3);
+      }
+  
+      video.setAttribute("width", width);
+      video.setAttribute("height", height);
+      canvas.setAttribute("width", width);
+      canvas.setAttribute("height", height);
+      document.getElementById("camContainer").style.height = height + 'px';
+      streaming = true;
+    }
+
     function startup() {
 
       video = document.getElementById("video");
+      camContainer = document.getElementById("camContainer");
       canvas = document.getElementById("canvas");
       startbutton = document.getElementById("startbutton");
       takeAnotherButton = document.getElementById("takeanother");
@@ -35,17 +53,7 @@
         "canplay",
         (ev) => {
           if (!streaming) {
-            height = video.videoHeight / (video.videoWidth / width);
-  
-            if (isNaN(height)) {
-              height = width / (4 / 3);
-            }
-  
-            video.setAttribute("width", width);
-            video.setAttribute("height", height);
-            canvas.setAttribute("width", width);
-            canvas.setAttribute("height", height);
-            streaming = true;
+              updateCanvasSize();
           }
         },
         false,
@@ -97,6 +105,13 @@
         startbutton.style.display = "none";
         takeAnotherButton.style.display = "block";
         document.getElementById("publish").style.display = "block";
+        console.log(camContainer.style.height)
+
+        document.getElementById("camContainer").style.height = height + 'px';
+       // camContainer.setAttribute("width", width);
+        //camContainer.setAttribute("height", height);
+        //camContainer.style.height = height + 'px';
+        //console.log(camContainer.style.height)
       } else {
         clearphoto();
       }
@@ -111,5 +126,17 @@
         document.getElementById("publish").style.display = "none";
     }
 
+
     window.addEventListener("load", startup, false);
+
+    window.addEventListener('orientationchange', () => {
+      updateCanvasSize();
+      console.log(window.innerWidth > window.innerHeight ? 'landscape' : 'portrait');
+    });
+
+    document.getElementById('video').addEventListener('seeked', (e) => {
+        console.log(resize);
+        console.log(e.target.videoWidth);
+        console.log(e.target.videoHeight)
+    });
   })();

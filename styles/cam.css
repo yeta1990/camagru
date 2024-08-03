@@ -1,21 +1,12 @@
 #video {
-    border: 1px solid black;
+    border: 1px solid blue;
     box-shadow: 2px 2px 3px black;
-    width: 800px;
-    height: 600px;
-  }
-  
-  #photo {
-    border: 1px solid black;
-    box-shadow: 2px 2px 3px black;
-    width: 800px;
-    height: 600px;
+    width: 600px;
   }
   
  
-  
   .camera {
-    width: 800px;
+    width: 600px;
     display: inline-block;
   }
   
@@ -32,12 +23,6 @@
     border: 1px solid rgb(255 255 255 / 70%);
     box-shadow: 0px 0px 1px 2px rgb(0 0 0 / 20%);
     font-size: 14px;
-    font-family: "Lucida Grande", "Arial", sans-serif;
     color: rgb(255 255 255 / 100%);
   }
   
-  .contentarea {
-    font-size: 16px;
-    font-family: "Lucida Grande", "Arial", sans-serif;
-    width: 760px;
-  }
