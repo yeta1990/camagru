@@ -154,6 +154,7 @@
             window.location.replace("/home");
         }
         event.preventDefault();
+        /*
         var formData = new FormData();
         //var imageFile = document.getElementById('imageFile').files[0];
         formData.append('imageFile', data);
@@ -161,10 +162,19 @@
         formData.append('watermark', document.getElementById("watermark-display").src);
         //formData.append('caption', document.getElementById("caption").value);
 
-        fetch('/api/image/watermark', {
+
+        console.log(formData);
+        */
+        fetch('/api/image/merge', {
             method: 'POST',
             headers,
-            body: formData
+            body: JSON.stringify(
+              {
+                "imageFile": data, 
+                "caption": caption, 
+                "watermark": document.getElementById("watermark-display").src
+              })
+            //body: formData
         })
         .then(response => response.json())
         .then(data => {
@@ -174,6 +184,7 @@
             displayMyImages(data);
         })
         .catch(error => {
+          console.log(error);
             document.getElementById("formFeedback").textContent = error;
             document.getElementById("formFeedback").style.visibility = "visible";
         });

@@ -18,7 +18,7 @@
             $this->addRoute('GET', 'api/image', 'getImage');
             $this->addRoute('GET', 'api/image/pages', 'getNumOfPages');
             $this->addRoute('POST', 'api/image', 'postImage');
-            $this->addRoute('GET', 'api/image/merge', 'mergeImages');
+            $this->addRoute('POST', 'api/image/merge', 'mergeImages');
             $this->addRoute('POST', 'api/image/like', 'like');
             $this->addRoute('POST', 'api/image/comment', 'comment');
             $this->addRoute('DELETE', 'api/image', 'deleteImage');
@@ -134,8 +134,20 @@
         }
 
         protected function mergeImages(){
-            header('content-type: image/png');
-            $this->imageService->mergeImages();
+            $input_parsed = json_decode(file_get_contents('php://input'), true);
+            var_dump($input_parsed);
+            $data = $input_parsed["imageFile"];
+            list($type, $data) = explode(';', $data);
+            list(, $data)      = explode(',', $data);
+            $data = base64_decode($data);
+            file_put_contents('uploads/image.png', $data);
+            //echo $_POST["caption"];
+            //echo $_FILES["imageFile"];
+            //$this->postImage();
+            //echo "eo";
+            //exit;
+            //header('content-type: image/png');
+            $this->imageService->mergeImages('uploads/image.png', $input_parsed["watermark"]);
         }
     }
 ?>

@@ -218,7 +218,8 @@
             $watermark_h = imagesy($watermark_img);
 
             $dst_im = imagecreatetruecolor($watermark_w,$watermark_h);
-            $dst_im = imagecreatefromjpeg($back_image);
+            //$dst_im = imagecreatefromjpeg($back_image);
+            $dst_im = imagecreatefrompng($back_image);
             
             $canvas = imagecreatetruecolor($watermark_w, $watermark_h);
             imagecopy($canvas, $dst_im, 0, 0, $dst_x, $dst_y, $watermark_w, $watermark_h);
@@ -227,7 +228,7 @@
             return $dst_im;
         }
 
-        public function mergeImages(){
+        public function mergeImages($back_image, $watermark_path){
             //$token = $this->jwtService->getBearerToken();
             //$userId = $this->jwtService->getUserId($token);
             $userId = 1;
@@ -235,7 +236,8 @@
             $fileNameToSave =  $userId . '-' . time() . '.' . $imageFileType;
             $targetFile = $this->targetDir . $fileNameToSave;
 
-            $back_image='assets/b.jpg';
+            //$back_image='assets/b.jpg';
+
             $watermark = imagecreatefrompng('assets/dog.png');
             
             $image = $this->imageMergeAlpha($back_image, $watermark, 0, 0, 0, 0);
