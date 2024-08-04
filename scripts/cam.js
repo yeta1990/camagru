@@ -12,6 +12,7 @@
     let publishButton = null;
     let camContainer = null
     
+    let data = null;
   
     function updateCanvasSize() {
       height = video.videoHeight / (video.videoWidth / width);
@@ -85,7 +86,7 @@
       context.fillStyle = "#AAA";
       context.fillRect(0, 0, canvas.width, canvas.height);
   
-      const data = canvas.toDataURL("image/png");
+      //const data = canvas.toDataURL("image/png");
       //photo.setAttribute("src", data);
     }
   
@@ -96,7 +97,7 @@
         canvas.height = height;
         context.drawImage(video, 0, 0, width, height);
   
-        const data = canvas.toDataURL("image/png");
+        data = canvas.toDataURL("image/png");
         console.log("take foto");
         //cam.setAttribute("src", data);
         document.getElementById("canvas").style.display = "block";
@@ -139,4 +140,43 @@
         console.log(e.target.videoWidth);
         console.log(e.target.videoHeight)
     });
+
+
+    document.getElementById('publish').addEventListener('click', function(event) {
+
+        const token = localStorage.getItem('token');
+        const headers = {};
+
+        if (token) {
+            //to do: check exp date from token. if expired, remove token and redirect to home
+            headers['Authorization'] = `Bearer ${token}`;
+        }else if(!["/home", "/signup"].includes(window.location.pathname)){
+            window.location.replace("/home");
+        }
+        event.preventDefault();
+        var formData = new FormData();
+        //var imageFile = document.getElementById('imageFile').files[0];
+        formData.append('imageFile', data);
+        formData.append('caption', "caption");
+        formData.append('watermark', document.getElementById("watermark-display").src);
+        //formData.append('caption', document.getElementById("caption").value);
+
+        fetch('/api/image/watermark', {
+            method: 'POST',
+            headers,
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("formFeedback").textContent = "Upload successfully";
+            document.getElementById("formFeedback").style.visibility= "visible";
+            console.log(data);
+            displayMyImages(data);
+        })
+        .catch(error => {
+            document.getElementById("formFeedback").textContent = error;
+            document.getElementById("formFeedback").style.visibility = "visible";
+        });
+    });
+
   })();
