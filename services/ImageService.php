@@ -99,6 +99,16 @@
         }
 
         public function deleteImage($id){
+            $image = $this->getImage($id);
+            $realpath = realpath($image['url']);
+            if (is_writable($realpath)){
+                unlink($realpath);
+            }
+            else {
+                echo json_encode(["code" => 400, "message"=>"bad image id"]);
+                http_response_code(400);
+                exit;
+            }
             $dbConnection = $this->dbService->getDb();
             $query = "DELETE FROM images where id = :id";
             $stmt = $dbConnection->prepare($query);
