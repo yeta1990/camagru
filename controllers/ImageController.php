@@ -107,11 +107,13 @@
                 $commenterUser = $this->userService->getUserById($userId)->getObjectVars();
                 $image = $this->imageService->getImage($input_parsed["image_id"]);
                 $imageOwnerUser = $this->userService->getUserById($image["user_id"])->getObjectVars();
-                MailService::send(
-                    $imageOwnerUser['email'],
-                    $imageOwnerUser['username'],
-                    'camagru-albgarci: You have a new comment',
-                    'You have a new comment from '. $commenterUser["username"] .' : <a href="http://localhost:8080/image?id=' . $input_parsed["image_id"]. '">View comment</a>');
+                if ($imageOwnerUser["notifications"]){
+                    MailService::send(
+                        $imageOwnerUser['email'],
+                        $imageOwnerUser['username'],
+                        'camagru-albgarci: You have a new comment',
+                        'You have a new comment from '. $commenterUser["username"] .' : <a href="http://localhost:8080/image?id=' . $input_parsed["image_id"]. '">View comment</a>');
+                }
                 echo json_encode(["code" => 200, "comments"=>$comments]);
             }
             else {
@@ -153,10 +155,10 @@
             else {
                 $caption = "";
             }
-            $image = new Image($imageName, $caption, 1, "", time());
-            $image->create();
             $token = $this->jwtService->getBearerToken();
             $userId = $this->jwtService->getUserId($token);
+            $image = new Image($imageName, $caption, $userId, "", time());
+            $image->create();
             echo json_encode($this->imageService->getImageByUserId($userId));
             exit;
 

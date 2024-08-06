@@ -15,7 +15,7 @@
             if (count($results) == 0){
                 return null;
             }
-            $foundUser = new User($results["email"], $results["username"], $confirmed = $results["confirmed"]);
+            $foundUser = new User($results["email"], $results["username"], $results["notifications"], $confirmed = $results["confirmed"], );
             $foundUser->setId($results["id"]);
             return $foundUser;
         }
@@ -80,7 +80,7 @@
                 exit ;
             }
 
-            $user = new User($email, $username, $password);
+            $user = new User($email, $username, 1, $password);
             $user_id = $user->create();
 
             //to do: catch result and exceptions
@@ -105,7 +105,7 @@
                 echo json_encode(["code" => 400, "message"=>"Email not available"]);
                 exit ;
             }
-            $userToUpdate = new User($email, $username);
+            $userToUpdate = new User($email, $username, $user["notifications"]);
             $userToUpdate->setId($id);
             $userToUpdate->setConfirmed();
             $userToUpdate->update();
@@ -142,6 +142,16 @@
                     'Change the password for your account in camagru-albgarci: <a href="http://localhost:8080/user/edit/pass?token=' . $confirmationToken . '">Verify</a>'
                 );
             }
+        }
+
+
+        public function toggleNotifications($id){
+            $user = $this->getUserById($id);
+            $newValue = 1;
+            if ($user->hasNotificationsEnabled()){
+                $newValue = 0;
+            }
+            $this->db->query("UPDATE users SET notifications = " . $newValue . " where id = ". $id);
         }
     }
 

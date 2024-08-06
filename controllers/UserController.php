@@ -21,6 +21,7 @@
             $this->addRoute('POST', 'api/user/signup', 'signup');
             $this->addRoute('POST', 'api/user/edit', 'edit');
             $this->addRoute('POST', 'api/user/recover', 'recover');
+            $this->addRoute('POST', 'api/user/notifications', 'toggleNotifications');
         }
 
         protected function loginCheck(){
@@ -116,6 +117,13 @@
             }
             echo json_encode(["code" => 200, "message"=>"ok"]);
 
+        }
+
+        protected function toggleNotifications(){
+            $token = $this->jwtService->getBearerToken();
+            $userId = $this->jwtService->getUserId($token);
+            $this->userService->toggleNotifications($userId);
+            return $this->whoami();
         }
     }
 ?>

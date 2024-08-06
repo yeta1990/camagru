@@ -1,18 +1,20 @@
 <?php
 
     class User extends Model{
-        
+
         protected $email;
         protected $username;
         protected $password;
         protected $confirmed;
+        protected $notifications;
 
-        public function __construct($email, $username, $password = "", $confirmed = 0){
+        public function __construct($email, $username, $notifications, $password = "",  $confirmed = 0){
             parent::__construct("users");
             $this->email = $email;
             $this->username = $username;
             $this->password= $password;
             $this->confirmed = $confirmed;
+            $this->notifications = $notifications;
         }
 
         public function create(){
@@ -38,6 +40,10 @@
 
         public function isConfirmed(){
             return $this->confirmed;
+        }
+
+        public function hasNotificationsEnabled(){
+            return $this->notifications;
         }
 
     }

@@ -3,5 +3,6 @@ CREATE TABLE users (
 	email TEXT NOT NULL UNIQUE,
 	username TEXT NOT NULL UNIQUE,
 	password TEXT NOT NULL,
-	confirmed BOOLEAN
+	confirmed BOOLEAN,
+	notifications INTEGER DEFAULT 1
 );

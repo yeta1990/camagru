@@ -19,8 +19,14 @@
         <label for="password">Change password:</label>
         <input type="password" id="password" name="password">
         <input type="submit">
-        
     </form>
+
+    <hr>
+
+    <span id="notif">
+    </span>
+    <button id="notif-button" type="submit"></button>
+        
     <span style="visibility: hidden;" id="editFeedback"></span>
     <div id="footerContainer"></div>
     <script src="/scripts/templateLoader.js"></script>
@@ -31,11 +37,36 @@
                     document.getElementById('id').value = data.id;
                     document.getElementById('email').value = data.email;
                     document.getElementById('username').value = data.username;
+                    document.getElementById('notif').innerText = `Notifications by email ${data.notifications ? " enabled" : " disabled"}`;
+                    document.getElementById('notif-button').innerText = `${data.notifications ? "Disable " : "Enable "}notifications`;
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });
         });
+
+        document.getElementById('notif-button').addEventListener('click', function(event){
+            event.preventDefault();
+
+            authFetch('/api/user/notifications', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(data => {
+                //document.getElementById("editFeedback").textContent = "Edited successfully";
+                //document.getElementById("editFeedback").style.visibility= "visible";
+                console.log(data);
+                document.getElementById('notif').innerText = `Notifications by email ${data.notifications ? " enabled" : " disabled"}`;
+                document.getElementById('notif-button').innerText = `${data.notifications ? "Disable " : "Enable "}notifications`;
+            })
+            .catch(error => {
+                document.getElementById("editFeedback").textContent = error;
+                document.getElementById("editFeedback").style.visibility = "visible";
+            });
+
+        })
 
         document.getElementById('editForm').addEventListener('submit', function(event) {
             event.preventDefault();
