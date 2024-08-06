@@ -248,11 +248,15 @@
 
             //$back_image='assets/b.jpg';
 
-            $watermark = imagecreatefrompng('assets/dog.png');
+            //parse_url($watermark_path, PHP_URL_PATH);
+
+            $watermark = imagecreatefrompng(trim(parse_url($watermark_path, PHP_URL_PATH), "/"));
             
             $image = $this->imageMergeAlpha($back_image, $watermark, 0, 0, 0, 0);
             imagepng($image, $targetFile);
-            return imagepng($image);
+            unlink('uploads/image.png');
+            return $targetFile;
+            //return imagepng($image);
         }
     }
 ?>

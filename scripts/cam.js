@@ -98,7 +98,6 @@
         context.drawImage(video, 0, 0, width, height);
   
         data = canvas.toDataURL("image/png");
-        console.log("take foto");
         //cam.setAttribute("src", data);
         document.getElementById("canvas").style.display = "block";
         document.getElementById("video").style.display = "none";
@@ -106,7 +105,6 @@
         startbutton.style.display = "none";
         takeAnotherButton.style.display = "block";
         document.getElementById("publish").style.display = "block";
-        console.log(camContainer.style.height)
 
         document.getElementById("camContainer").style.height = height + 'px';
        // camContainer.setAttribute("width", width);
@@ -132,15 +130,7 @@
 
     window.addEventListener('orientationchange', () => {
       updateCanvasSize();
-      console.log(window.innerWidth > window.innerHeight ? 'landscape' : 'portrait');
     });
-
-    document.getElementById('video').addEventListener('seeked', (e) => {
-        console.log(resize);
-        console.log(e.target.videoWidth);
-        console.log(e.target.videoHeight)
-    });
-
 
     document.getElementById('publish').addEventListener('click', function(event) {
 
@@ -154,17 +144,7 @@
             window.location.replace("/home");
         }
         event.preventDefault();
-        /*
-        var formData = new FormData();
-        //var imageFile = document.getElementById('imageFile').files[0];
-        formData.append('imageFile', data);
-        formData.append('caption', "caption");
-        formData.append('watermark', document.getElementById("watermark-display").src);
-        //formData.append('caption', document.getElementById("caption").value);
 
-
-        console.log(formData);
-        */
         fetch('/api/image/merge', {
             method: 'POST',
             headers,
@@ -180,7 +160,6 @@
         .then(data => {
             document.getElementById("formFeedback").textContent = "Upload successfully";
             document.getElementById("formFeedback").style.visibility= "visible";
-            console.log(data);
             displayMyImages(data);
         })
         .catch(error => {

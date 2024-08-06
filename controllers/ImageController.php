@@ -135,7 +135,6 @@
 
         protected function mergeImages(){
             $input_parsed = json_decode(file_get_contents('php://input'), true);
-            var_dump($input_parsed);
             $data = $input_parsed["imageFile"];
             list($type, $data) = explode(';', $data);
             list(, $data)      = explode(',', $data);
@@ -147,7 +146,20 @@
             //echo "eo";
             //exit;
             //header('content-type: image/png');
-            $this->imageService->mergeImages('uploads/image.png', $input_parsed["watermark"]);
+            $imageName = $this->imageService->mergeImages('uploads/image.png', $input_parsed["watermark"]);
+            if (isset($_POST["caption"])){
+                $caption = $_POST["caption"];
+            }
+            else {
+                $caption = "";
+            }
+            $image = new Image($imageName, $caption, 1, "", time());
+            $image->create();
+            $token = $this->jwtService->getBearerToken();
+            $userId = $this->jwtService->getUserId($token);
+            echo json_encode($this->imageService->getImageByUserId($userId));
+            exit;
+
         }
     }
 ?>
