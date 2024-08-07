@@ -15,18 +15,21 @@
     let data = null;
   
     function updateCanvasSize() {
-      height = video.videoHeight / (video.videoWidth / width);
+      if (document.getElementById("video").style.display != 'none'){
+     
+        height = video.videoHeight / (video.videoWidth / width);
   
-      if (isNaN(height)) {
-        height = width / (4 / 3);
+        if (isNaN(height)) {
+          height = width / (4 / 3);
+        }
+  
+        video.setAttribute("width", width);
+        video.setAttribute("height", height);
+        canvas.setAttribute("width", width);
+        canvas.setAttribute("height", height);
+        document.getElementById("camContainer").style.height = height + 'px';
+        streaming = true;
       }
-  
-      video.setAttribute("width", width);
-      video.setAttribute("height", height);
-      canvas.setAttribute("width", width);
-      canvas.setAttribute("height", height);
-      document.getElementById("camContainer").style.height = height + 'px';
-      streaming = true;
     }
 
     function startup() {
@@ -123,6 +126,7 @@
         document.getElementById("startbutton").style.display = "block";
         document.getElementById("takeanother").style.display = "none";
         document.getElementById("publish").style.display = "none";
+        updateCanvasSize();
     }
 
 
@@ -145,6 +149,7 @@
         }
         event.preventDefault();
 
+        console.log("calling");
         fetch('/api/image/merge', {
             method: 'POST',
             headers,

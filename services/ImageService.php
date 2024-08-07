@@ -251,7 +251,7 @@
             //parse_url($watermark_path, PHP_URL_PATH);
 
             $watermark = imagecreatefrompng(trim(parse_url($watermark_path, PHP_URL_PATH), "/"));
-            
+
             $image = $this->imageMergeAlpha($back_image, $watermark, 0, 0, 0, 0);
             imagepng($image, $targetFile);
             unlink('uploads/image.png');

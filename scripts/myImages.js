@@ -9,7 +9,6 @@ async function fetchMyImages() {
 }
 
 function setPublicationContent(publication, image){
-    console.log(publication.querySelector('.sidebar-img'));
     publication.querySelector('.sidebar-img').src = image.url;
 
     //publication.querySelector('.view-comments-button').href = `/image?id=${data.id}`;
