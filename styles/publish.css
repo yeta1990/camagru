@@ -5,15 +5,18 @@
 }
 
 #publishSide{
-    flex-wrap: nowrap;
-    max-height: 600px;
-    overflow-y: auto;
     display: flex;
+    flex-wrap: wrap;
+}
+
+#postContainer {
+    display:flex;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
 }
 
 .sidebar-img {
-    width: 100%;
     height: auto;
     display: block;
     margin: 10px;

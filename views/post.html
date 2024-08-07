@@ -20,86 +20,76 @@
 <body>
     <div id="headerContainer"></div>
     
-    <br>
-    <br>
-    <div class="camContainer" id="camContainer">
-        <div class="watermark">
-            <img src="/assets/dog.png" id="watermark-display"/>
-        </div>
-        <div class="camera">
-          <video id="video">Video stream not available.</video>
-        </div>
-        <canvas class="cam" id="canvas"> </canvas>
-        
-        
-    </div>
-    <div id="take" class="take">
-      <button id="startbutton" class="cameraButtons">Take photo</button>
-      <button id="takeanother" class="cameraButtons">Take another photo</button>
-      <button id="publish" class="cameraButtons">Publish</button>
-    </div>
+
+    <div id="postContainer">
+
+        <br />
+        <button id="publishFromDevice">Publish picture from device</button> 
+        <br />
+        <button id="openCamera">Take photo with the camera</button>
+        <div id="takePhotoContainer">
+            <div class="camContainer" id="camContainer">
+                <div class="watermark">
+                    <img src="/assets/dog.png" id="watermark-display"/>
+                </div>
+                <div class="camera">
+                <video id="video">Video stream not available.</video>
+                </div>
+                <canvas class="cam" id="canvas"> </canvas>
 
 
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-<!--
-    <div class="camContainer">
-        <div class="watermark">
-            <img src="/assets/dog.png" id="watermark-display"/>
-        </div>
-        <canvas class="cam" id="canvas"> </canvas>
-
-    </div>
--->
-
-    <div class="watermark-container">
-        <div class="watermark-img" id="dog">
-            <img src="/assets/dog.png" />
-        </div>
-        <div class="watermark-img" id="cat">
-            <img src="/assets/cat.png" style="top:50%"/>
-        </div>
-        <div class="watermark-img" id="sloth">
-            <img src="/assets/sloth.png" />
-        </div>
-    </div>
-    <br>
-    <br>
-
-    <div class="publishMainContainer">
-        
-        
-
-        <div class="publishMain">
-        <h1>Post image</h1>
-            <form id="uploadForm" enctype="multipart/form-data">
-                <input type="file" id="imageFile" name="imageFile" accept="image/*" required>
-                <br>
-                Caption: <input type="text" id="caption" name="caption">
-                <br>
-                <br>
-                <button type="submit">Upload image</button>
-            </form>
-
-            <span style="visibility: hidden;" id="formFeedback"></span>
-        </div>
-        <br>
-        <br>
-        
-        <div>
-            <h1>My published images</h1>
-            <div id="publishSide">
+            </div>
+            <div id="take" class="take">
+            <button id="startbutton" class="cameraButtons">Take photo</button>
+            <button id="takeanother" class="cameraButtons">Take another photo</button>
+            <button id="publish" class="cameraButtons">Publish</button>
+            </div>
+            <br>
+            <div class="watermark-container">
+                <div class="watermark-img" id="dog">
+                    <img src="/assets/dog.png" />
+                </div>
+                <div class="watermark-img" id="cat">
+                    <img src="/assets/cat.png" style="top:50%"/>
+                </div>
+                <div class="watermark-img" id="sloth">
+                    <img src="/assets/sloth.png" />
+                </div>
             </div>
         </div>
+        <br>
+        <br>
 
+        <div class="publishMainContainer" id="publishMainContainer">
+
+
+
+            <div class="publishMain" id="publishMain">
+            <h1>Post image</h1>
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <input type="file" id="imageFile" name="imageFile" accept="image/*" required>
+                    <br>
+                    Caption: <input type="text" id="caption" name="caption">
+                    <br>
+                    <br>
+                    <button type="submit">Upload image</button>
+                </form>
+
+                <span style="visibility: hidden;" id="formFeedback"></span>
+            </div>
+            <br>
+            <br>
+
+        </div>
     </div>
+
+    <div>
+        <h1>My published images</h1>
+        <div id="publishSide">
+        </div>
+    </div>
+
+
     <div id="footerContainer"></div>
     <template id="imageForSidebar">
         <div class="sidebar-post">

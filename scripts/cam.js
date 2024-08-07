@@ -34,6 +34,8 @@
 
     function startup() {
 
+      //document.getElementById("takePhotoContainer").style.display = "none";
+      //document.getElementById("publishMainContainer").style.display = "none";
       video = document.getElementById("video");
       camContainer = document.getElementById("camContainer");
       canvas = document.getElementById("canvas");

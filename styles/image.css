@@ -4,10 +4,16 @@
     margin: 0 auto;
     padding: 20px;
 }
+
+
 .post {
     border-bottom: 1px solid #ccc;
     padding-bottom: 20px;
     margin-bottom: 20px;
+}
+
+.post-image {
+    width: 100%;
 }
 .post img {
     display: block;

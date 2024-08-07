@@ -2,10 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit User</title>
     <script src="/scripts/authFetch.js" defer></script>
 </head>
 <body>
+
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/user/edit">Edit profile</a></li>
+                <li><a href="/post">New post</a></li>
+                <li><a href="/feed">Feed</a></li>
+            </ul>
+        </nav>
+        <button id="logoutButton">Logout</button>
+    </header>
     <div id="headerContainer"></div>
     <h1>Edit User</h1>
     <form id="editForm">
@@ -29,7 +42,6 @@
         
     <span style="visibility: hidden;" id="editFeedback"></span>
     <div id="footerContainer"></div>
-    <script src="/scripts/templateLoader.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             authFetch(`/api/user/whoami`)
