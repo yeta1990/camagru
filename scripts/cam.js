@@ -34,8 +34,12 @@
 
     function startup() {
 
-      //document.getElementById("takePhotoContainer").style.display = "none";
-      //document.getElementById("publishMainContainer").style.display = "none";
+      document.getElementById("takePhotoContainer").style.display = "none";
+      document.getElementById("publishMainContainer").style.display = "none";
+
+    }
+
+    function openCam(){
       video = document.getElementById("video");
       camContainer = document.getElementById("camContainer");
       canvas = document.getElementById("canvas");
@@ -133,6 +137,30 @@
 
 
     window.addEventListener("load", startup, false);
+
+
+    function stopCam() {
+      video.pause();
+      video.src = "";
+      video.srcObject.getTracks()[0].stop()
+
+    }
+
+    document.getElementById("openCamera").addEventListener("click", () => {
+
+      openCam();
+      document.getElementById("takePhotoContainer").style.display = "block";
+      document.getElementById("publishMainContainer").style.display = "none";
+      
+    })
+
+    document.getElementById("publishFromDevice").addEventListener("click", () => {
+
+      stopCam();
+      document.getElementById("publishMainContainer").style.display = "block";
+      document.getElementById("takePhotoContainer").style.display = "none";
+      
+    })
 
     window.addEventListener('orientationchange', () => {
       updateCanvasSize();
