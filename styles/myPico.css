@@ -5,6 +5,7 @@
     --pico-form-element-spacing-vertical: 0.5rem;
     --pico-form-element-spacing-horizontal: 1.0rem;
     --pico-border-radius: 0.375rem;
+    --primary: #00acc1;
 }
 
 @media (min-width: 576px) {

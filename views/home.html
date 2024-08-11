@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="stylesheet" href="../styles/pico.min.css">
+    <link rel="stylesheet" href="../styles/myPico.css">
+    <link rel="stylesheet" href="../styles/normalize.css">
 </head>
 <body>
 
 
-    <h1>Login</h1>
+    <h1>camagru @albgarci</h1>
+    <h3>Login</h3>
     <form id="loginForm">
         <label for="email">Email:</label>
         <input type="text" id="email" name="email" required>
@@ -51,14 +55,13 @@
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 if (data.token) {
-                    // Guarda el token en localStorage
                     localStorage.setItem('token', data.token);
                     window.location.replace("/user/edit");
                 } else if (data.message) {
                     document.getElementById("loginFormBanner").textContent = data.message;
                     document.getElementById("loginFormBanner").style.visibility= "visible";
+                    document.getElementById("loginForm").hidden = true;
                 }
                 else{
                     document.getElementById("loginFormBanner").textContent = "Try again";

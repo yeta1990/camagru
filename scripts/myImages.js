@@ -10,8 +10,11 @@ async function fetchMyImages() {
 
 function setPublicationContent(publication, image){
     publication.querySelector('.sidebar-img').src = image.url;
+    publication.querySelector('.sidebar-img').style = "cursor: pointer";
+    publication.querySelector('.sidebar-img').addEventListener("click", () => {
+        window.location = `image?id=${image.id}`;
+    });
 
-    //publication.querySelector('.view-comments-button').href = `/image?id=${data.id}`;
     const postElement = publication.querySelector('.sidebar-post');
     postElement.setAttribute('data-post-id', image.id);
 }

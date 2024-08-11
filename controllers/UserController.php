@@ -39,7 +39,7 @@
                         $user['username'],
                         'Login camagru-albgarci',
                         'To log into camagru-albgarci follow this link (valid for 10 min): <a href="http://localhost:8080/api/user/login2?token=' . $token . '">Verify</a>');
-                    echo json_encode(["code" => 200, "message"=>"To finish login, click on the link sent to your email"]);
+                    echo json_encode(["code" => 200, "message"=>"Good credentials provided! To finish login, click on the link sent to your email"]);
                 }
                 else if ($user){
                     echo json_encode(["message" => "Before your first login you must confirm your account. Check your email!"]);
