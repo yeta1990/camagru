@@ -33,6 +33,11 @@ function setCommentContent(comment, data) {
     comment.querySelector('.comment-username').textContent = data.username;
     comment.querySelector('.comment-text').textContent = data.comment;
     comment.querySelector('.comment-date').textContent = new Date(data.date * 1000).toLocaleDateString() + ' - ' + new Date(data.date * 1000).toLocaleTimeString();
+
+    //trick to renderize properly html tags without executing them
+    const tempElement = document.createElement('div');
+    tempElement.innerHTML = comment.querySelector('.comment-text').textContent;
+    comment.querySelector('.comment-text').textContent = tempElement.textContent;
 }
 
 function fetchPost(id) {

@@ -26,7 +26,8 @@
 
         protected function postImage(){
             $imageName = $this->imageService->postImage();
-            $image = new Image($imageName, $_POST["caption"], 1, "", time());
+            $captionSanitized = htmlspecialchars($_POST["caption"]);
+            $image = new Image($imageName, $captionSanitized, 1, "", time());
 
             $image->create();
             $token = $this->jwtService->getBearerToken();
@@ -103,7 +104,8 @@
             if (isset($input_parsed['image_id'], $input_parsed["comment"]) && strlen($input_parsed["comment"]) > 0 && strlen($input_parsed["comment"]) < 257) {
                 $token = $this->jwtService->getBearerToken();
                 $userId = $this->jwtService->getUserId($token);
-                $comments = $this->imageService->comment($userId, $input_parsed['comment'], $input_parsed["image_id"]);
+                $commentSanitized = htmlspecialchars($input_parsed['comment']);
+                $comments = $this->imageService->comment($userId, $commentSanitized, $input_parsed["image_id"]);
                 $commenterUser = $this->userService->getUserById($userId)->getObjectVars();
                 $image = $this->imageService->getImage($input_parsed["image_id"]);
                 $imageOwnerUser = $this->userService->getUserById($image["user_id"])->getObjectVars();

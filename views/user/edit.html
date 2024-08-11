@@ -4,39 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit User</title>
+    <script src="https://kit.fontawesome.com/2db25d6296.js" crossorigin="anonymous"></script> 
     <script src="/scripts/authFetch.js" defer></script>
 
-    <link rel="stylesheet" href="../styles/normalize.css">
-    <link
-  rel="stylesheet"
-  href="../styles/pico.min.css"
->
+
 </head>
 <body>
 
 
     <div id="headerContainer"></div>
     <h1>Edit User</h1>
-    <form id="editForm">
-        <input type="hidden" name="id" id="id">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username">
-        <br>
-        <label for="email">Email:</label>
-        <input type="text" id="email" name="email">
-        <br>
-        <label for="password">Change password:</label>
-        <input type="password" id="password" name="password">
-        <input type="submit">
-    </form>
+    <div class="container">
+        <form id="editForm">
+            <input type="hidden" name="id" id="id">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username">
+            <br>
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email">
+            <br>
+            <label for="password">Change password:</label>
+            <input type="password" id="password" name="password">
+            <input type="submit">
+        </form>
 
-    <hr>
+        <span style="visibility: hidden;" id="editFeedback"></span>
+        <br />
+        <hr>
 
-    <span id="notif">
-    </span>
-    <button id="notif-button" type="submit"></button>
-        
-    <span style="visibility: hidden;" id="editFeedback"></span>
+        <span id="notif">
+        </span>
+        <button id="notif-button" type="submit"></button>
+
+
+    </div>
     <div id="footerContainer"></div>
     <script src="/scripts/templateLoader.js"></script>
     <script>

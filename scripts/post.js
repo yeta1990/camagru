@@ -8,6 +8,9 @@ function setPostContent(post, data) {
     const postElement = post.querySelector('.post');
     postElement.setAttribute('data-post-id', data.id);
 
+    const tempElement = document.createElement('div');
+    tempElement.innerHTML = post.querySelector('.caption').textContent;
+    post.querySelector('.caption').textContent = tempElement.textContent;
 
 }
 
