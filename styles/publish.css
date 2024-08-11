@@ -55,7 +55,6 @@
 }
 
 .publishMain{
-    min-width: 500px;
 }
 
 .sidebar-img {
@@ -64,7 +63,7 @@
 
 .camContainer {
     position: relative;
-    width: 600px;
+    /*width: 600px;*/
 }
 
 .watermark {

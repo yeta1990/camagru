@@ -1,6 +1,6 @@
 (() => {
   
-    const width = 600; 
+    let width = 0; 
     let height = 0; 
   
     let streaming = false;
@@ -15,9 +15,13 @@
     let data = null;
   
     function updateCanvasSize() {
-      if (document.getElementById("video").style.display != 'none'){
+      if (document.getElementById("video").style.display == 'block'){
      
+        
         height = video.videoHeight / (video.videoWidth / width);
+        
+        console.log("height")
+        console.log(height)
   
         if (isNaN(height)) {
           height = width / (4 / 3);
@@ -28,20 +32,28 @@
         canvas.setAttribute("width", width);
         canvas.setAttribute("height", height);
         document.getElementById("camContainer").style.height = height + 'px';
+        document.getElementById("camContainer").style.width = width + 'px';
         streaming = true;
       }
     }
 
     function startup() {
 
+
+
+      //console.log(height)
       document.getElementById("takePhotoContainer").style.display = "none";
       document.getElementById("publishMainContainer").style.display = "none";
+      
 
     }
 
     function openCam(){
+      //width = window.innerWidth;
+      width = window.innerWidth < 500 ? 300 : 500;
       video = document.getElementById("video");
       camContainer = document.getElementById("camContainer");
+      camContainer.style.width = width;
       canvas = document.getElementById("canvas");
       startbutton = document.getElementById("startbutton");
       takeAnotherButton = document.getElementById("takeanother");
@@ -100,6 +112,7 @@
     }
   
     function takepicture() {
+      
       const context = canvas.getContext("2d");
       if (width && height) {
         canvas.width = width;
@@ -116,6 +129,7 @@
         document.getElementById("publish").style.display = "block";
 
         document.getElementById("camContainer").style.height = height + 'px';
+        document.getElementById("camContainer").style.width = width + 'px';
        // camContainer.setAttribute("width", width);
         //camContainer.setAttribute("height", height);
         //camContainer.style.height = height + 'px';
@@ -132,7 +146,7 @@
         document.getElementById("startbutton").style.display = "block";
         document.getElementById("takeanother").style.display = "none";
         document.getElementById("publish").style.display = "none";
-        updateCanvasSize();
+        //updateCanvasSize();
     }
 
 
@@ -140,17 +154,27 @@
 
 
     function stopCam() {
-      video.pause();
-      video.src = "";
-      video.srcObject.getTracks()[0].stop()
+      video = document.getElementById("video");
+      if (video.width > 0){
+        video.pause();
+        video.src = "";
+        video.srcObject.getTracks()[0].stop()
+      }
 
     }
 
     document.getElementById("openCamera").addEventListener("click", () => {
 
+
+
       openCam();
       document.getElementById("takePhotoContainer").style.display = "block";
       document.getElementById("publishMainContainer").style.display = "none";
+      video.style = "";
+      canvas.style.display = "none";
+      takeAnother();
+      
+
       
     })
 
