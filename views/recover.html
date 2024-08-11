@@ -3,17 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit User</title>
+    <link rel="stylesheet" href="../styles/pico.min.css">
+    <link rel="stylesheet" href="../styles/myPico.css">
+    <link rel="stylesheet" href="../styles/normalize.css">
 </head>
 <body>
-    <h1>Recover password</h1>
-    <form id="recoverForm">
-        <label for="email">Email:</label>
-        <input type="text" id="email" name="email">
-        <br>
-        <input type="submit">
-        
-    </form>
-    <span style="visibility: hidden;" id="recoverFormBanner"></span>
+    <div class="container">
+        <h1>Recover password</h1>
+        <form id="recoverForm">
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email">
+            <br>
+            <input type="submit">
+            
+        </form>
+        <span style="visibility: hidden;" id="recoverFormBanner"></span>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             localStorage.removeItem('token'); // Elimina el token del localStorage

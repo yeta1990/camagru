@@ -5,24 +5,29 @@
     <title>Signup</title>
     <script src="/scripts/authFetch.js" defer></script>
     <script type="module" src="/scripts/signup.js" defer></script>
+    <link rel="stylesheet" href="../styles/pico.min.css">
+    <link rel="stylesheet" href="../styles/myPico.css">
+    <link rel="stylesheet" href="../styles/normalize.css">
 </head>
 <body>
     <h1>Signup</h1>
-    All fields are required.
-    <form id="signupForm">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <br>
-        <label for="email">Email:</label>
-        <input type="text" id="email" name="email" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <br>
-        <input type="submit" value="Sign Up">
-    </form>
-    <span style="visibility: hidden;" id="signupFeedback"></span>
-    <script>
-    </script>
+    All fields are required.<br>
+    <div class="container">
+        <form id="signupForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <br>
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" required>
+            <br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <br>
+            <input type="submit" value="Sign Up">
+        </form>
+        <span style="visibility: hidden;" id="signupFeedback"></span>
+    </div>
+    <br>
+    <a href="/home">Already registered? Go to login</a>
 </body>
 </html>
