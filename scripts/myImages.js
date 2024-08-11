@@ -28,9 +28,9 @@ function deleteImage(id){
         displayMyImages(data);
     })
     .catch(error => {
-        console.log(error);
-        document.getElementById("commentError").textContent = error;
-        document.getElementById("commentError").style.display= "block";
+        //console.log(error);
+        //document.getElementById("commentError").textContent = error;
+        //document.getElementById("commentError").style.display= "block";
     });
 }
 

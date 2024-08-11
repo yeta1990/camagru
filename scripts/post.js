@@ -57,7 +57,7 @@ function displayLikes(likes, postElement) {
     else {
         postElement.querySelector(".fa-heart").classList.remove("fa-solid");
         postElement.querySelector(".fa-heart").classList.add("fa-regular");
-        postElement.querySelector(".fa-heart").style.color = "black";
+        postElement.querySelector(".fa-heart").style.color = "";
     }
 
     const likesList = document.createElement('span');

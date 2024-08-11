@@ -39,7 +39,7 @@ function toggleTheme() {
     let currentTheme = document.documentElement.getAttribute('data-theme');
 
     console.log("eooo");
-    let newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    let newTheme = currentTheme === 'light' || '' ? 'dark' : 'light';
 
     document.documentElement.setAttribute('data-theme', newTheme);
     if (newTheme == 'dark'){
@@ -60,6 +60,9 @@ function applyStoredTheme() {
         else {
             document.getElementById('toggleTheme').innerHTML = "<i class='fa-solid fa-moon'></i>&nbsp;Turn on dark mode";
         }
+    }
+    else{
+            document.getElementById('toggleTheme').innerHTML = "<i class='fa-solid fa-moon'></i>&nbsp;Turn on dark mode";
     }
 }
 

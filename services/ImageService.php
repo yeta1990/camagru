@@ -13,35 +13,84 @@
             $this->userService = new UserService();
         }
 
+        private function checkImageFiletype(){
+            //extension
+            $imageFileType = strtolower(pathinfo($_FILES["imageFile"]["name"], PATHINFO_EXTENSION));
+            $validExtensions = ['jpg', 'jpeg', 'png'];
+            if (!in_array($imageFileType, $validExtensions)) {
+                http_response_code(400);
+                echo json_encode(["code" => 400, "message"=>"Invalid image extension"]);
+                exit;
+            }
+
+            //mimetype
+            $mimeType = mime_content_type($_FILES["imageFile"]["tmp_name"]);
+            $validMimeTypes = ['image/jpeg', 'image/png'];
+            if (!in_array($mimeType, $validMimeTypes)) {
+                http_response_code(400);
+                echo json_encode(["code" => 400, "message"=>"Invalid MIME type"]);
+                exit;
+            }
+
+            //magic number
+            $file = fopen($_FILES["imageFile"]["tmp_name"], 'rb');
+            $magicNumber = fread($file, 4);
+            fclose($file);
+
+            $jpegMagicNumbers = ["\xFF\xD8\xFF\xE0", "\xFF\xD8\xFF\xE1", "\xFF\xD8\xFF\xE2"];
+            $pngMagicNumber = "\x89\x50\x4E\x47";
+
+            if (!in_array($magicNumber, $jpegMagicNumbers) && $magicNumber !== $pngMagicNumber) {
+                http_response_code(400);
+                echo json_encode(["code" => 400, "message"=>"Invalid file content"]);
+                exit;
+            }
+
+        }
 
         private function saveToDisk(){
             $token = $this->jwtService->getBearerToken();
             $userId = $this->jwtService->getUserId($token);
             $imageFileType = strtolower(pathinfo($_FILES["imageFile"]["name"], PATHINFO_EXTENSION));
+            
+
             $fileNameToSave =  $userId . '-' . time() . '.' . $imageFileType;
             $targetFile = $this->targetDir . $fileNameToSave;
             if (!move_uploaded_file($_FILES["imageFile"]["tmp_name"], $targetFile)) {
-                echo json_encode(["code" => 400, "message"=>"Error uploading file"]);
                 http_response_code(400);
+                echo json_encode(["code" => 400, "message"=>"Error uploading file"]);
                 exit ;
             }
+
+
             return $targetFile;
         }
 
+        private function checkImageSize() {
+
+            $maxSize = 500000; //bytes
+
+            if ($_FILES["imageFile"]["size"] > $maxSize) {
+                http_response_code(400);
+                echo json_encode(["code" => 400, "message" => "File too large"]);
+                exit;
+            }
+        }
+
+        private function checkImageValidity() {
+            $check = getimagesize($_FILES["imageFile"]["tmp_name"]);
+    
+            if ($check === false) {
+                http_response_code(400);
+                echo json_encode(["code" => 400, "message" => "File isn't a valid image"]);
+                exit;
+            }
+        }
+
         private function verifyImage(){
-            if ($_FILES["imageFile"]["size"] > 500000) {
-                throw new ErrorException("File too large");
-            }
-            try {
-                //var_dump ($_FILES["imageFile"]);
-                $check = getimagesize($_FILES["imageFile"]["tmp_name"]);
-            }
-            catch (ErrorException $th){
-                echo $th;
-            }
-            if ($check == false) {
-                throw new ErrorException("File isn't a valid image");
-            }
+            $this->checkImageFiletype();
+            $this->checkImageSize(); 
+            $this->checkImageValidity();
         }
 
         public function postImage(){
@@ -49,11 +98,9 @@
                 $this->verifyImage();
                 $uploadedFileName = $this->saveToDisk();
             } catch (Exception $th) {
-                //echo $th;
-                echo json_encode(["code" => 400, "message"=>$th->getMessage()]);
                 http_response_code(400);
+                echo json_encode(["code" => 400, "message"=>$th->getMessage()]);
                 exit ;
-                
             }
             return $uploadedFileName;
             
@@ -104,11 +151,6 @@
             if (is_writable($realpath)){
                 unlink($realpath);
             }
-            else {
-                echo json_encode(["code" => 400, "message"=>"bad image id"]);
-                http_response_code(400);
-                exit;
-            }
             $dbConnection = $this->dbService->getDb();
             $query = "DELETE FROM images where id = :id";
             $stmt = $dbConnection->prepare($query);
@@ -128,8 +170,8 @@
                 $result["likes"] = $this->getLikesUsernames($id);
                 return $result;
             }
-            echo json_encode(["code" => 400, "message"=>"bad image id"]);
             http_response_code(400);
+            echo json_encode(["code" => 400, "message"=>"bad image id"]);
             exit;
         }
 
@@ -154,8 +196,8 @@
                 return $this->getComments($image_id);
             }
             else{
-                echo json_encode(["code" => 400, "message"=>"bad image id"]);
                 http_response_code(400);
+                echo json_encode(["code" => 400, "message"=>"bad image id"]);
                 exit;
             }
         }

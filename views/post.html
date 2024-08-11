@@ -155,11 +155,18 @@
                 headers,
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(err.message || "Upload failed");
+                    });
+                }   
+                return response.json()
+            })
             .then(data => {
                 document.getElementById("formFeedback").textContent = "Upload successfully";
                 document.getElementById("formFeedback").style.visibility= "visible";
-                console.log(data);
+                //console.log(data);
                 displayMyImages(data);
             })
             .catch(error => {

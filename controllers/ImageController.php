@@ -60,8 +60,8 @@
             $results_per_page= array_key_exists("limit", $queries) ? $queries["limit"] : 10;
 
             if ($results_per_page < 1 || $results_per_page > 20){
-                echo json_encode(["code" => 400, "message"=>"what are you trying to do?"]);
                 http_response_code(400);
+                echo json_encode(["code" => 400, "message"=>"what are you trying to do?"]);
                 exit;
             }
             echo json_encode($this->imageService->getFeed($page,$results_per_page));
