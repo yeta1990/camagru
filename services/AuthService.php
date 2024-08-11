@@ -12,12 +12,14 @@
         */
 
         private $whitelist;
+        private $whitelistOrigins;
         private $path;
         private $method;
         private $jwtService;
 
-        public function __construct($whitelist){
+        public function __construct($whitelist, $whitelistOrigins){
             $this->whitelist = $whitelist;
+            $this->whitelistOrigins = $whitelistOrigins;
             $this->path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
             $this->method = $_SERVER['REQUEST_METHOD'];
             $this->jwtService = new JwtService("keyff");
@@ -40,11 +42,27 @@
             return false;
         }
 
+
+        private function isWhiteListOrigin() {
+            foreach ($this->whitelistOrigins as $route) {
+                if (trim($route["path"],'/') == $this->path && $route["method"] == $this->method) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public function checkPath(){
+            if ($this->isWhiteListRoute() && $this->checkCORS()){
+                return true;
+            }
             $this->checkCORS();
             if (!$this->isWhiteListRoute() && !$this->hasValidToken()){
-                http_response_code(200);
-                exit ;
+                header('HTTP/1.1 403 Forbidden');
+                echo json_encode([
+                    'error' => 'Invalid origin'
+                ]);
+                exit; 
             }
         }
 
@@ -61,6 +79,12 @@
         }
 
         private function checkCORS() {
+            
+            if ($this->isWhiteListOrigin()){
+                return true;
+            }
+            
+
             $allowed_origin = "http://localhost:8080";
             $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
             $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';

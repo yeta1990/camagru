@@ -94,15 +94,16 @@ class JwtService {
         $payload = json_decode($this->base64URLDecode($matches["payload"]), true);
         $expiration_date = $this->getExpirationDate($token);
         if ($expiration_date < time()) {
+            
             return false;
         }
         return $payload;
     }
 
 
-    public function generateToken($user_id){
+    public function generateToken($user_id, $expiration_time = 604800){
 
-        $expiration_time = 604800; //7 days
+        //$expiration_time = 604800; //7 days
         $payload = [
             "user_id" => $user_id,
             "exp" => time() + $expiration_time

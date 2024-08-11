@@ -46,12 +46,26 @@ $whitelistRoutes = [
         "method" => "GET"
     ],
     [
-        "path" => "api/image/merge",
+        "path" => "api/user/login2",
+        "method" => "GET"
+    ]
+
+];
+
+$whitelistOriginRoutes = [
+
+    [
+        "path" => "api/user/verify",
+        "method" => "GET"
+    ],
+    [
+        "path" => "api/user/login2",
         "method" => "GET"
     ]
 ];
 
-$authService = new AuthService($whitelistRoutes);
+
+$authService = new AuthService($whitelistRoutes, $whitelistOriginRoutes);
 $authService->checkPath();
 
 //end of basic auth check middleware\\

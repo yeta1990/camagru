@@ -12,7 +12,7 @@
 
         public function getUserById($id){
             $results = $this->db->findById("users", $id)->fetchArray();
-            if (count($results) == 0){
+            if (!$results || count($results) == 0){
                 return null;
             }
             $foundUser = new User($results["email"], $results["username"], $results["notifications"], $confirmed = $results["confirmed"], );
@@ -59,24 +59,24 @@
         public function signUp($email, $username, $password){
 
             if (!$this->validLength($email) || !$this->validLength($username) || !$this->validLength($password)){
-                http_response_code(401);
-                echo json_encode(["code" => 401, "message"=>"Invalid length of fields"]);
+                http_response_code(400);
+                echo json_encode(["code" => 400, "message"=>"Invalid length of fields"]);
                 exit ;
             }
 
             if (!$this->isUsernameAvailable($username)){
-                http_response_code(401);
-                echo json_encode(["code" => 401, "message"=>"Username not available"]);
+                http_response_code(400);
+                echo json_encode(["code" => 400, "message"=>"Username not available"]);
                 exit ;
             }
             if (!$this->isEmailAvailable($email)){
-                http_response_code(401);
-                echo json_encode(["code" => 401, "message"=>"Email not available"]);
+                http_response_code(400);
+                echo json_encode(["code" => 400, "message"=>"Email not available"]);
                 exit ;
             }
             if (!$this->isValidPassword($password)){
                 http_response_code(401);
-                echo json_encode(["code" => 401, "message"=>"Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number."]);
+                echo json_encode(["code" => 400, "message"=>"Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number."]);
                 exit ;
             }
 
@@ -94,7 +94,13 @@
                 echo json_encode(["code" => 400, "message"=>"Invalid length of fields"]);
                 exit ;
             }
-            $user = $this->getUserById($id)->getObjectVars();
+            $foundUser = $this->getUserById($id);
+            if (!$foundUser){
+                http_response_code(401);
+                echo json_encode(["code" => 401, "message"=>"Bad login"]);
+                exit;
+            }
+            $user = $foundUser->getObjectVars();
             if ($user["username"] != $username && !$this->isUsernameAvailable($username)){
                 http_response_code(400);
                 echo json_encode(["code" => 400, "message"=>"Username not available"]);
