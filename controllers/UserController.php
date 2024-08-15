@@ -7,7 +7,7 @@
         private $authService;
 
         public function __construct(){
-            $this->jwtService = new JwtService("keyff");
+            $this->jwtService = new JwtService(getenv("JWT_PASS"));
             $this->userService = new UserService();
             $this->authService = new AuthService([], []);
             $this->initRoutes();

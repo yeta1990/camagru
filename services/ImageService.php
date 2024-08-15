@@ -7,7 +7,7 @@
         private $userService;
 
         public function __construct(){
-            $this->jwtService = new JwtService("keyff");
+            $this->jwtService = new JwtService(getenv("JWT_PASS"));
             $this->targetDir = "uploads/";
             $this->dbService = new DbService();
             $this->userService = new UserService();

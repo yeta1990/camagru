@@ -7,7 +7,7 @@
 
         public function __construct(){
             $this->db = new DbService();
-            $this->jwtService = new JwtService("keyff");
+            $this->jwtService = new JwtService(getenv("JWT_PASS"));
         }
 
         public function getUserById($id){
@@ -145,7 +145,7 @@
                 $user = $this->getUserByEmail($email);
                 $confirmationToken = $this->jwtService->generateConfirmationAccountToken($user["id"]);
                 MailService::send($email, $email, 'Recover password',
-                    'Change the password for your account in camagru-albgarci: <a href="http://localhost:8080/user/edit/pass?token=' . $confirmationToken . '">Verify</a>'
+                    'Change the password for your account in camagru-albgarci: <a href="http://localhost:8080/user/edit/pass?token=' . $confirmationToken . '">Change</a>'
                 );
             }
         }

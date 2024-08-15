@@ -22,7 +22,7 @@
             $this->whitelistOrigins = $whitelistOrigins;
             $this->path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
             $this->method = $_SERVER['REQUEST_METHOD'];
-            $this->jwtService = new JwtService("keyff");
+            $this->jwtService = new JwtService(getenv("JWT_PASS"));
         }
 
         private function getBearerToken(){

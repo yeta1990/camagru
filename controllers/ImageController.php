@@ -7,7 +7,7 @@
         private $jwtService;
 
         public function __construct(){
-            $this->jwtService = new JwtService("keyff");
+            $this->jwtService = new JwtService(getenv("JWT_PASS"));
             $this->imageService = new ImageService();
             $this->userService = new UserService();
             $this->initRoutes();
