@@ -27,7 +27,7 @@ function getCurrentPage() {
 async function fetchImages(page) {
     const images = await authFetch(`/api/image/feed?page=${page}&limit=${LIMIT_PAGE}`)
         .then(data => data)
-        .catch(error => console.error('Error fetching images:', error));
+        .catch(error => {});
     return images;
 }
 
@@ -43,7 +43,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const totalPages = await authFetch(`/api/image/pages?limit=${LIMIT_PAGE}`)
         .then(data => data)
         .catch(error => {
-            console.error('Error:', error);
         });
 
     const currentPage = getCurrentPage();

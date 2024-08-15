@@ -203,7 +203,6 @@
         }
         event.preventDefault();
 
-        console.log("calling");
         fetch('/api/image/merge', {
             method: 'POST',
             headers,

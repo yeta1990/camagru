@@ -7,6 +7,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('username').value = data.username;
         })
         .catch(error => {
-            console.error('Error:', error);
+            //console.error('Error:', error);
         });
 });

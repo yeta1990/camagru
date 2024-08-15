@@ -47,7 +47,7 @@ function fetchPost(id) {
             displayPost(data);
             displayComments(data.comments);
         })
-        .catch(error => console.log(error)/*window.location.replace("/feed")*/);
+        .catch(error => window.location.replace("/feed"));
 }
 
 

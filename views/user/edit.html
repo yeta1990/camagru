@@ -58,7 +58,6 @@
                 })
                 .catch(error => {
 
-                    //console.error('Error:', error);
                 });
         });
 
@@ -103,7 +102,6 @@
             .then(data => {
                 document.getElementById("editFeedback").textContent = "Edited successfully";
                 document.getElementById("editFeedback").style.visibility= "visible";
-                console.log(data);
             })
             .catch(error => {
                 document.getElementById("editFeedback").textContent = error;

@@ -10,7 +10,6 @@ async function loadTemplate(url, targetElementId) {
             addFooterFunctionality();
         }
     } catch (error) {
-        console.error('Error loading template:', error);
     }
 }
 
@@ -42,11 +41,12 @@ function toggleTheme() {
 
     document.documentElement.setAttribute('data-theme', newTheme);
     if (newTheme == 'dark'){
-        document.getElementById('toggleTheme').innerHTML = "<i class='fa-regular fa-lightbulb'></i>&nbsp;Turn off dark mode";
+        document.getElementById('toggleTheme').innerHTML = "<img src='/assets/lamp.png'  style='width:15px'/>&nbsp;Turn off dark mode";
     }else {
-        document.getElementById('toggleTheme').innerHTML = "<i class='fa-solid fa-moon'></i>&nbsp;Turn on dark mode";
+        document.getElementById('toggleTheme').innerHTML = "<img src='/assets/moon.png'  style='width:15px'/>&nbsp;Turn on dark mode";
     }
     localStorage.setItem('theme', newTheme);
+    window.location.reload();
 }
 
 function applyStoredTheme() {
@@ -54,14 +54,14 @@ function applyStoredTheme() {
     if (storedTheme) {
         document.documentElement.setAttribute('data-theme', storedTheme);
         if (storedTheme == 'dark'){
-            document.getElementById('toggleTheme').innerHTML = "<i class='fa-regular fa-lightbulb'></i>&nbsp;Turn off dark mode";
+            document.getElementById('toggleTheme').innerHTML = "<img src='/assets/lamp.png' style='width:15px'/>&nbsp;Turn off dark mode";
         }
         else {
-            document.getElementById('toggleTheme').innerHTML = "<i class='fa-solid fa-moon'></i>&nbsp;Turn on dark mode";
+        document.getElementById('toggleTheme').innerHTML = "<img src='/assets/moon.png'  style='width:15px'/>&nbsp;Turn on dark mode";
         }
     }
     else{
-            document.getElementById('toggleTheme').innerHTML = "<i class='fa-solid fa-moon'></i>&nbsp;Turn on dark mode";
+        document.getElementById('toggleTheme').innerHTML = "<img src='/assets/moon.png'  style='width:15px'/>&nbsp;Turn on dark mode";
     }
 }
 

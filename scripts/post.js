@@ -19,24 +19,24 @@ function createPostElement() {
     return document.importNode(postTemplate, true);
 }
 
-function transformLikesText(likes){
-    if (likes.length == 0){
+function transformLikesText(likes) {
+    if (likes.length == 0) {
         return "Nobody likes this image."
     }
-    else if (likes.length == 1 && likes[0] == ""){
+    else if (likes.length == 1 && likes[0] == "") {
         return "Log in to see who likes this image."
     }
-    let likesText = ""; 
+    let likesText = "";
 
     let hasUserLiked = false;
 
-    if (likes.length == 1 && likes.includes("you")){
+    if (likes.length == 1 && likes.includes("you")) {
         return "You like this image."
     }
-    else if (likes.length == 1){
+    else if (likes.length == 1) {
         return "One user likes this image."
     }
-    else if (likes.includes("you")){
+    else if (likes.includes("you")) {
         hasUserLiked = true;
         likes = likes.filter(username => username != "you");
         likesText = "You and " + likes.length + " more users like this image."
@@ -49,15 +49,15 @@ function displayLikes(likes, postElement) {
     while (likesContainer.firstChild) {
         likesContainer.removeChild(likesContainer.firstChild);
     }
-    if (likes.includes("you")){
-        postElement.querySelector(".fa-heart").classList.add("fa-solid");
-        postElement.querySelector(".fa-heart").classList.remove("fa-regular");
-        postElement.querySelector(".fa-heart").style.color = "red";
+    if (likes.includes("you")) {
+        console.log("you")
+        postElement.querySelector(".fa-heart").src = "/assets/heart-red.png";
     }
     else {
-        postElement.querySelector(".fa-heart").classList.remove("fa-solid");
-        postElement.querySelector(".fa-heart").classList.add("fa-regular");
-        postElement.querySelector(".fa-heart").style.color = "";
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        
+
+        postElement.querySelector(".fa-heart").src = `/assets/heart-${currentTheme === 'dark' ? 'white' : 'black'}.png`;
     }
 
     const likesList = document.createElement('span');
@@ -69,16 +69,16 @@ function displayLikes(likes, postElement) {
 
 function submitLike(event) {
 
-        const postElement = event.target.closest('.post');
-        const postId = postElement.getAttribute('data-post-id');
+    const postElement = event.target.closest('.post');
+    const postId = postElement.getAttribute('data-post-id');
 
-        authFetch('/api/image/like', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ "image_id": postId })
-        })
+    authFetch('/api/image/like', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "image_id": postId })
+    })
         .then(data => {
             displayLikes(data.likes, postElement);
         })
@@ -96,7 +96,7 @@ function displayPost(data) {
     const likeButton = post.querySelector('.like-button');
     displayLikes(data.likes, post);
     likeButton.addEventListener('click', submitLike);
-    
+
     postContainer.appendChild(post);
 
 }

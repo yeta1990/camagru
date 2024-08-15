@@ -87,6 +87,9 @@ function displayPublishedImage(image){
 
 function displayMyImages(images){
     
+    if (!images || images.error){
+        return;
+    }
     publishSide.innerHTML = '';
     images.forEach(image => {
         displayPublishedImage(image);
