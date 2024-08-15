@@ -33,7 +33,6 @@
                 $user = $this->userService->checkPassword($username, $password);
                 if ($user && $user["confirmed"]){ 
                     $token = $this->jwtService->generateToken($user["id"], 600);
-                    //echo json_encode(["token" => $token]);
                     MailService::send(
                         $user['email'],
                         $user['username'],
@@ -99,12 +98,7 @@
             $input_parsed = json_decode(file_get_contents('php://input'), true);
             if (isset($input_parsed['username'], $input_parsed['email'], $input_parsed["password"])) {
                 $user_id = $this->userService->signUp($input_parsed["email"], $input_parsed["username"], $input_parsed["password"]);
-                $confirmationToken = $this->jwtService->generateConfirmationAccountToken($user_id);
-                MailService::send(
-                    $input_parsed['email'],
-                    $input_parsed['username'],
-                    'Confirm registration in camagru-albgarci',
-                    'Verify your account in camagru-albgarci: <a href="http://localhost:8080/api/user/verify?token=' . $confirmationToken . '">Verify</a>');
+                $this->userService->sendVerificationEmail($input_parsed, $user_id);
                 echo json_encode(["code" => 200, "message"=>"ok"]);
             } 
             else{
@@ -130,9 +124,22 @@
                 header("HTTP/1.1 301 Moved Permanently");
                 header("Location: /verified");
             }
-            else{
-                //to do, send a new verification email
+            else if (isset($this->query["token"])){
+                $token = $this->query["token"];
+                $userId = $this->jwtService->getUserId($token);
+                $userData = $this->userService->getUserById($userId)->getObjectVars();
+                if ($userData["confirmed"] == 1){
+                    header("HTTP/1.1 301 Moved Permanently");
+                    header("Location: /verified");
+                    exit;
+                }
+                //$this->userService->sendVerificationEmail($userData, $userId);
+                echo json_encode("your verification link expired, we've sent to you another one by email");
+                exit;
+            }
+            else {
                 echo "not verified";
+                exit;
             }
         }
 

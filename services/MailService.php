@@ -40,12 +40,12 @@
             ];
 
             $context  = stream_context_create($options);
-            $result = file_get_contents($url, false, $context); //uncomment to send emil
+            $result = file_get_contents($url, false, $context); 
             $result = TRUE;
 
             if ($result === FALSE) {
-                // Handle error
-                echo "Error sending email";
+                return false;
+                //echo "Error sending email";
             } else {
                 return $result;
             }

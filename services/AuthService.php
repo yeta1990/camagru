@@ -1,15 +1,6 @@
 <?php
 
     class AuthService {
-        //$decoded = JWT::decode($token, new Key($this->secretKey, 'HS256'));
-        //$userId = $decoded->user_id; // Asumiendo que el ID del usuario está en 'user_id'
-        /*
-        if (!isset($headers['Authorization'])) {
-            header("HTTP/1.0 401 Unauthorized");
-            echo "401 Unauthorized";
-            return;
-        }
-        */
 
         private $whitelist;
         private $whitelistOrigins;

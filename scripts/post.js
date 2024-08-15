@@ -50,7 +50,6 @@ function displayLikes(likes, postElement) {
         likesContainer.removeChild(likesContainer.firstChild);
     }
     if (likes.includes("you")) {
-        console.log("you")
         postElement.querySelector(".fa-heart").src = "/assets/heart-red.png";
     }
     else {

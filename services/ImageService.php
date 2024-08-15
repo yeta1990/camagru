@@ -221,6 +221,7 @@
 
             $query = "SELECT username from users a where a.id in ($likes);";
             $stmt = $dbConnection->prepare($query);
+
             $result = $stmt->execute();
 
             if ($userId){
@@ -258,7 +259,6 @@
                 $result = $stmt->execute();
 
 
-                /* get likes */
                 $likesUsernames = $this->getLikesUsernames($image_id);
                 return $likesUsernames;
             }

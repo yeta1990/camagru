@@ -19,11 +19,9 @@ class DbService {
     }
 
     public function insert($tableName, $object) {
-        /*echo var_dump($object);*/
         $vars = $object->getObjectVars(false);
         $query = $this->objectToInsertQuery($tableName, $vars);
         $result = $this->query($query);
-        //to do: catch exceptions like unique constraint failed, empty field, etc.
         if ($result){
             return $this->db->lastInsertRowID();
         }

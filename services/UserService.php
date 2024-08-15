@@ -15,8 +15,11 @@
             if (!$results || count($results) == 0){
                 return null;
             }
-            $foundUser = new User($results["email"], $results["username"], $results["notifications"], $confirmed = $results["confirmed"], );
+            $foundUser = new User($results["email"], $results["username"], $results["notifications"]);
             $foundUser->setId($results["id"]);
+            if ($results["confirmed"] == 1) {
+                $foundUser->setConfirmed();
+            }
             return $foundUser;
         }
 
@@ -158,6 +161,16 @@
                 $newValue = 0;
             }
             $this->db->query("UPDATE users SET notifications = " . $newValue . " where id = ". $id);
+        }
+
+        public function sendVerificationEmail($user_data, $user_id){
+            $confirmationToken = $this->jwtService->generateConfirmationAccountToken($user_id);
+            MailService::send(
+                $user_data['email'],
+                $user_data['username'],
+                'Confirm registration in camagru-albgarci',
+                'Verify your account in camagru-albgarci: <a href="http://localhost:8080/api/user/verify?token=' . $confirmationToken . '">Verify</a>'
+                );
         }
     }
 

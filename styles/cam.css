@@ -1,12 +1,10 @@
 #video {
     border: 1px solid blue;
     box-shadow: 2px 2px 3px black;
-    /*width: 600px;*/
   }
   
  
   .camera {
-    /*width: 600px;*/
     display: inline-block;
   }
   

@@ -114,7 +114,7 @@ class JwtService {
 
     public function generateConfirmationAccountToken($user_id){
 
-        $expiration_time = 1800; //30min
+        $expiration_time = 600; //30min
         $payload = [
             "user_id" => $user_id,
             "exp" => time() + $expiration_time
