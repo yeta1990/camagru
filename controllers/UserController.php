@@ -127,7 +127,12 @@
             else if (isset($this->query["token"])){
                 $token = $this->query["token"];
                 $userId = $this->jwtService->getUserId($token);
-                $userData = $this->userService->getUserById($userId)->getObjectVars();
+                $user = $this->userService->getUserById($userId);
+                if (!$user){
+                    echo "user not found, are you manipulating the jwt?";
+                    exit;
+                }
+                $userData = $user->getObjectVars();
                 if ($userData["confirmed"] == 1){
                     header("HTTP/1.1 301 Moved Permanently");
                     header("Location: /verified");
