@@ -151,6 +151,7 @@
         document.getElementById("takeanother-or").style.display = "none";
         document.getElementById("publish").style.display = "none";
         document.getElementById("caption-cam-span").style.display = "none";
+        document.getElementById("caption-cam").value = "";
         //updateCanvasSize();
     }
 
@@ -175,6 +176,7 @@
       openCam();
       document.getElementById("takePhotoContainer").style.display = "flex";
       document.getElementById("publishMainContainer").style.display = "none";
+      document.getElementById("formFeedback").style.visibility= "none";
       video.style = "";
       canvas.style.display = "none";
       takeAnother();
@@ -195,6 +197,8 @@
       stopCam();
       document.getElementById("publishMainContainer").style.display = "block";
       document.getElementById("takePhotoContainer").style.display = "none";
+      document.getElementById("formFeedback").style.visibility= "none";
+      document.getElementById("caption-cam").value = "";
       
     })
 
