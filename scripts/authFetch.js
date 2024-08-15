@@ -18,9 +18,9 @@ async function authFetch(url, options = {}, contentType = 'application/json') {
     return fetch(url, updatedOptions)
         .then(response => {return {"status": response.status, "data": response.json()}})
         .then(async data => {
-            if (data.status == 401){
+            if (data.status == 401 || data.status == 403){
                 localStorage.removeItem('token');
-                //window.location.replace("/home");
+                window.location.replace("/home");
             }
             else if (data.status != 200){
                 const message = (await data["data"]).message;

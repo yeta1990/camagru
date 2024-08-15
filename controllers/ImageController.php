@@ -24,14 +24,16 @@
             $this->addRoute('DELETE', 'api/image', 'deleteImage');
         }
 
-        protected function postImage(){
-            $imageName = $this->imageService->postImage();
-            $captionSanitized = htmlspecialchars($_POST["caption"]);
-            $image = new Image($imageName, $captionSanitized, 1, "", time());
 
-            $image->create();
+        protected function postImage(){
             $token = $this->jwtService->getBearerToken();
             $userId = $this->jwtService->getUserId($token);
+            $imageName = $this->imageService->postImage();
+            $captionSanitized = htmlspecialchars($_POST["caption"]);
+            $image = new Image($imageName, $captionSanitized, $userId, "", time());
+
+            $image->create();
+
             echo json_encode($this->imageService->getImageByUserId($userId));
         }
 
@@ -144,22 +146,19 @@
             list(, $data)      = explode(',', $data);
             $data = base64_decode($data);
             file_put_contents('uploads/image.png', $data);
-            //echo $_POST["caption"];
-            //echo $_FILES["imageFile"];
-            //$this->postImage();
-            //echo "eo";
-            //exit;
-            //header('content-type: image/png');
+
             $imageName = $this->imageService->mergeImages('uploads/image.png', $input_parsed["watermark"]);
-            if (isset($_POST["caption"])){
-                $caption = $_POST["caption"];
+            if (isset($input_parsed["caption"])){
+                $captionSanitized = htmlspecialchars($input_parsed["caption"]);
             }
             else {
-                $caption = "";
+                $captionSanitized = "";
             }
+
+            $captionSanitized = htmlspecialchars($input_parsed["caption"]);
             $token = $this->jwtService->getBearerToken();
             $userId = $this->jwtService->getUserId($token);
-            $image = new Image($imageName, $caption, $userId, "", time());
+            $image = new Image($imageName, $captionSanitized, $userId, "", time());
             $image->create();
             echo json_encode($this->imageService->getImageByUserId($userId));
             exit;

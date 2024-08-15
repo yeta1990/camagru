@@ -50,7 +50,7 @@
 
     function openCam(){
       //width = window.innerWidth;
-      width = window.innerWidth < 500 ? 300 : 500;
+      width = window.innerWidth < 500 ? window.innerWidth : 500;
       video = document.getElementById("video");
       camContainer = document.getElementById("camContainer");
       camContainer.style.width = width;
@@ -58,6 +58,7 @@
       startbutton = document.getElementById("startbutton");
       takeAnotherButton = document.getElementById("takeanother");
       publish = document.getElementById("publish");
+      document.getElementById("takeanother-or").style.display = "none";
       takeAnotherButton.style.display = "none";
       publish.style.display = "none";
   
@@ -126,6 +127,8 @@
         
         startbutton.style.display = "none";
         takeAnotherButton.style.display = "block";
+        document.getElementById("takeanother-or").style.display = "flex";
+        document.getElementById("caption-cam-span").style.display = "block";
         document.getElementById("publish").style.display = "block";
 
         document.getElementById("camContainer").style.height = height + 'px';
@@ -145,7 +148,9 @@
         document.getElementById("canvas").style.display = "none";
         document.getElementById("startbutton").style.display = "block";
         document.getElementById("takeanother").style.display = "none";
+        document.getElementById("takeanother-or").style.display = "none";
         document.getElementById("publish").style.display = "none";
+        document.getElementById("caption-cam-span").style.display = "none";
         //updateCanvasSize();
     }
 
@@ -168,15 +173,22 @@
 
 
       openCam();
-      document.getElementById("takePhotoContainer").style.display = "block";
+      document.getElementById("takePhotoContainer").style.display = "flex";
       document.getElementById("publishMainContainer").style.display = "none";
       video.style = "";
       canvas.style.display = "none";
       takeAnother();
       
-
-      
     })
+
+
+    function uploadSuccessful() {
+      stopCam();
+      document.getElementById("publishMainContainer").style.display = "none";
+      document.getElementById("takePhotoContainer").style.display = "none";
+      document.getElementById("caption-cam").value = "";
+    }
+
 
     document.getElementById("publishFromDevice").addEventListener("click", () => {
 
@@ -196,7 +208,6 @@
         const headers = {};
 
         if (token) {
-            //to do: check exp date from token. if expired, remove token and redirect to home
             headers['Authorization'] = `Bearer ${token}`;
         }else if(!["/home", "/signup"].includes(window.location.pathname)){
             window.location.replace("/home");
@@ -210,22 +221,75 @@
             body: JSON.stringify(
               {
                 "imageFile": data, 
-                "caption": caption, 
+                "caption": document.getElementById("caption-cam").value,
                 "watermark": document.getElementById("watermark-display").src
               })
-            //body: formData
         })
         .then(response => response.json())
         .then(data => {
-            document.getElementById("formFeedback").textContent = "Upload successfully";
+            uploadSuccessful();
+            document.getElementById("formFeedback").textContent = "Published successfully";
             document.getElementById("formFeedback").style.visibility= "visible";
             displayMyImages(data);
         })
         .catch(error => {
-          console.log(error);
+          //console.log(error);
             document.getElementById("formFeedback").textContent = error;
             document.getElementById("formFeedback").style.visibility = "visible";
         });
     });
+
+
+    document.getElementById('cat').addEventListener("click", function(event){
+         const src = document.getElementById("cat").firstElementChild.src
+         document.getElementById("watermark-display").src = src;
+     })
+     document.getElementById('dog').addEventListener("click", function(event){
+         const src = document.getElementById("dog").firstElementChild.src
+         document.getElementById("watermark-display").src = src;
+     })
+     document.getElementById('sloth').addEventListener("click", function(event){
+         const src = document.getElementById("sloth").firstElementChild.src
+         document.getElementById("watermark-display").src = src;
+     })
+
+     document.getElementById('uploadForm').addEventListener('submit', function(event) {
+         const token = localStorage.getItem('token');
+         const headers = {};
+         if (token) {
+             headers['Authorization'] = `Bearer ${token}`;
+         }else if(!["/home", "/signup"].includes(window.location.pathname)){
+             window.location.replace("/home");
+         }
+         event.preventDefault();
+         var formData = new FormData();
+         var imageFile = document.getElementById('imageFile').files[0];
+         formData.append('imageFile', imageFile);
+         formData.append('caption', document.getElementById("caption").value);
+         fetch('/api/image', {
+             method: 'POST',
+             headers,
+             body: formData
+         })
+         .then(response => {
+             if (!response.ok) {
+                 return response.json().then(err => {
+                     throw new Error(err.message || "Upload failed");
+                 });
+             }   
+             return response.json()
+         })
+         .then(data => {
+             uploadSuccessful();
+             document.getElementById("formFeedback").textContent = "Published successfully";
+             document.getElementById("formFeedback").style.visibility= "visible";
+             //console.log(data);
+             displayMyImages(data);
+         })
+         .catch(error => {
+             document.getElementById("formFeedback").textContent = error;
+             document.getElementById("formFeedback").style.visibility = "visible";
+         });
+     });
 
   })();

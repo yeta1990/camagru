@@ -44,8 +44,13 @@
             </div>
             <div id="take" class="take">
             <button id="startbutton" class="cameraButtons">Take photo</button>
-            <button id="takeanother" class="cameraButtons">Take another photo</button>
+            
+
+            <span style="display: none;" id="caption-cam-span">Caption: <input type="text" id="caption-cam" name="caption"></span>
             <button id="publish" class="cameraButtons">Publish</button>
+            <div id="takeanother-or" class="takeanother-or"> 
+                <a id="takeanother" href="#">...or discard it and take another photo?</a><br> 
+            </div>
             </div>
             <br>
             <div class="watermark-container">
@@ -78,12 +83,14 @@
                     <button type="submit">Upload image</button>
                 </form>
 
-                <span style="visibility: hidden;" id="formFeedback"></span>
+
             </div>
             <br>
             <br>
 
         </div>
+
+        <span style="visibility: hidden;" id="formFeedback"></span>
     </div>
 
     <div class="container">
@@ -115,65 +122,7 @@
     <script src="/scripts/templateLoader.js"></script>
     <script>
 
-        document.getElementById('cat').addEventListener("click", function(event){
-
-            const src = document.getElementById("cat").firstElementChild.src
-            document.getElementById("watermark-display").src = src;
-        })
-
-        document.getElementById('dog').addEventListener("click", function(event){
-
-            const src = document.getElementById("dog").firstElementChild.src
-            document.getElementById("watermark-display").src = src;
-        })
-
-        document.getElementById('sloth').addEventListener("click", function(event){
-
-            const src = document.getElementById("sloth").firstElementChild.src
-            document.getElementById("watermark-display").src = src;
-        })
-
-        document.getElementById('uploadForm').addEventListener('submit', function(event) {
-
-            const token = localStorage.getItem('token');
-            const headers = {};
-
-            if (token) {
-                //to do: check exp date from token. if expired, remove token and redirect to home
-                headers['Authorization'] = `Bearer ${token}`;
-            }else if(!["/home", "/signup"].includes(window.location.pathname)){
-                window.location.replace("/home");
-            }
-            event.preventDefault();
-            var formData = new FormData();
-            var imageFile = document.getElementById('imageFile').files[0];
-            formData.append('imageFile', imageFile);
-            formData.append('caption', document.getElementById("caption").value);
-
-            fetch('/api/image', {
-                method: 'POST',
-                headers,
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => {
-                        throw new Error(err.message || "Upload failed");
-                    });
-                }   
-                return response.json()
-            })
-            .then(data => {
-                document.getElementById("formFeedback").textContent = "Upload successfully";
-                document.getElementById("formFeedback").style.visibility= "visible";
-                //console.log(data);
-                displayMyImages(data);
-            })
-            .catch(error => {
-                document.getElementById("formFeedback").textContent = error;
-                document.getElementById("formFeedback").style.visibility = "visible";
-            });
-        });
+ 
     </script>
     <script src="scripts/myImages.js"></script>
     <script src="scripts/cam.js"></script>

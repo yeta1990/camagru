@@ -38,7 +38,6 @@ function addFooterFunctionality() {
 function toggleTheme() {
     let currentTheme = document.documentElement.getAttribute('data-theme');
 
-    console.log("eooo");
     let newTheme = currentTheme === 'light' || '' ? 'dark' : 'light';
 
     document.documentElement.setAttribute('data-theme', newTheme);
