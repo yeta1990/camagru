@@ -133,7 +133,7 @@
                     header("Location: /verified");
                     exit;
                 }
-                //$this->userService->sendVerificationEmail($userData, $userId);
+                $this->userService->sendVerificationEmail($userData, $userId);
                 echo json_encode("your verification link expired, we've sent to you another one by email");
                 exit;
             }
