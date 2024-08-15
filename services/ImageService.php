@@ -14,6 +14,13 @@
         }
 
         private function checkImageFiletype(){
+
+            if (!isset($_FILES["imageFile"]["tmp_name"]) || $_FILES["imageFile"]["tmp_name"] == ""){
+                http_response_code(400);
+                echo json_encode(["code" => 400, "message"=>"Image too large"]);
+                exit;
+            }
+
             //extension
             $imageFileType = strtolower(pathinfo($_FILES["imageFile"]["name"], PATHINFO_EXTENSION));
             $validExtensions = ['jpg', 'jpeg', 'png'];
@@ -22,7 +29,6 @@
                 echo json_encode(["code" => 400, "message"=>"Invalid image extension"]);
                 exit;
             }
-
             //mimetype
             $mimeType = mime_content_type($_FILES["imageFile"]["tmp_name"]);
             $validMimeTypes = ['image/jpeg', 'image/png'];

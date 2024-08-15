@@ -1,5 +1,3 @@
-(() => {
-  
     let width = 0; 
     let height = 0; 
   
@@ -16,13 +14,9 @@
   
     function updateCanvasSize() {
       if (document.getElementById("video").style.display == 'block'){
-     
         
         height = video.videoHeight / (video.videoWidth / width);
         
-        console.log("height")
-        console.log(height)
-  
         if (isNaN(height)) {
           height = width / (4 / 3);
         }
@@ -37,20 +31,20 @@
       }
     }
 
-    function startup() {
 
-
-
-      //console.log(height)
-      document.getElementById("takePhotoContainer").style.display = "none";
-      document.getElementById("publishMainContainer").style.display = "none";
-      
-
+    function getInitialCamWidth(){
+      if (window.innerWidth > 500 && navigator.userAgentData.mobile){
+        return 360;
+      }
+      else if (window.innerWidth > 500){
+        return 500
+      }
+      return window.innerWidth;
     }
 
     function openCam(){
-      //width = window.innerWidth;
-      width = window.innerWidth < 500 ? window.innerWidth : 500;
+      document.getElementById("formFeedback").style.visibility= "hidden";
+      width = getInitialCamWidth();
       video = document.getElementById("video");
       camContainer = document.getElementById("camContainer");
       camContainer.style.width = width;
@@ -67,9 +61,13 @@
         .then((stream) => {
           video.srcObject = stream;
           video.play();
+          
+          document.getElementById("takePhotoContainer").style.display = "flex";
         })
         .catch((err) => {
-          console.error(`An error occurred: ${err}`);
+          document.getElementById("formFeedback").textContent = "Unable to access camera. Check permissions or plug a working camera";
+          document.getElementById("formFeedback").style.visibility= "visible";
+          document.getElementById("takePhotoContainer").style.display = "none";
         });
   
       video.addEventListener(
@@ -108,8 +106,6 @@
       context.fillStyle = "#AAA";
       context.fillRect(0, 0, canvas.width, canvas.height);
   
-      //const data = canvas.toDataURL("image/png");
-      //photo.setAttribute("src", data);
     }
   
     function takepicture() {
@@ -121,7 +117,6 @@
         context.drawImage(video, 0, 0, width, height);
   
         data = canvas.toDataURL("image/png");
-        //cam.setAttribute("src", data);
         document.getElementById("canvas").style.display = "block";
         document.getElementById("video").style.display = "none";
         
@@ -133,10 +128,7 @@
 
         document.getElementById("camContainer").style.height = height + 'px';
         document.getElementById("camContainer").style.width = width + 'px';
-       // camContainer.setAttribute("width", width);
-        //camContainer.setAttribute("height", height);
-        //camContainer.style.height = height + 'px';
-        //console.log(camContainer.style.height)
+
       } else {
         clearphoto();
       }
@@ -152,12 +144,7 @@
         document.getElementById("publish").style.display = "none";
         document.getElementById("caption-cam-span").style.display = "none";
         document.getElementById("caption-cam").value = "";
-        //updateCanvasSize();
     }
-
-
-    window.addEventListener("load", startup, false);
-
 
     function stopCam() {
       video = document.getElementById("video");
@@ -171,12 +158,10 @@
 
     document.getElementById("openCamera").addEventListener("click", () => {
 
-
-
       openCam();
-      document.getElementById("takePhotoContainer").style.display = "flex";
+      
       document.getElementById("publishMainContainer").style.display = "none";
-      document.getElementById("formFeedback").style.visibility= "none";
+      document.getElementById("formFeedback").style.visibility= "hidden";
       video.style = "";
       canvas.style.display = "none";
       takeAnother();
@@ -197,7 +182,7 @@
       stopCam();
       document.getElementById("publishMainContainer").style.display = "block";
       document.getElementById("takePhotoContainer").style.display = "none";
-      document.getElementById("formFeedback").style.visibility= "none";
+      document.getElementById("formFeedback").style.visibility= "hidden";
       document.getElementById("caption-cam").value = "";
       
     })
@@ -237,7 +222,6 @@
             displayMyImages(data);
         })
         .catch(error => {
-          //console.log(error);
             document.getElementById("formFeedback").textContent = error;
             document.getElementById("formFeedback").style.visibility = "visible";
         });
@@ -287,7 +271,6 @@
              uploadSuccessful();
              document.getElementById("formFeedback").textContent = "Published successfully";
              document.getElementById("formFeedback").style.visibility= "visible";
-             //console.log(data);
              displayMyImages(data);
          })
          .catch(error => {
@@ -295,5 +278,3 @@
              document.getElementById("formFeedback").style.visibility = "visible";
          });
      });
-
-  })();

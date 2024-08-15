@@ -4,7 +4,7 @@ async function fetchMyImages() {
         .then(data => {
             return data;
         })
-        .catch(error => console.log(error)/*window.location.replace("/feed")*/);
+        .catch(error => window.location.replace("/feed"));
     return images;
 }
 
@@ -31,9 +31,6 @@ function deleteImage(id){
         displayMyImages(data);
     })
     .catch(error => {
-        //console.log(error);
-        //document.getElementById("commentError").textContent = error;
-        //document.getElementById("commentError").style.display= "block";
     });
 }
 
@@ -53,7 +50,6 @@ function confirmationModal(postId, imageUrl){
     }
 
     confirmBtn.onclick = function() {
-        //alert(`Imagen confirmada:\nID: ${postId}\nURL: ${imageUrl}`);
         modal.style.display = "none";
         deleteImage(postId);
     }

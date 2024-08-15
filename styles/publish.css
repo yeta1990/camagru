@@ -45,6 +45,7 @@
         max-height: none;
         overflow-x: auto;
         overflow-y: hidden;
+        justify-content:center
     }
     
     .sidebar-img {
