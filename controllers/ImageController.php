@@ -30,6 +30,11 @@
             $userId = $this->jwtService->getUserId($token);
             $imageName = $this->imageService->postImage();
             $captionSanitized = htmlspecialchars($_POST["caption"]);
+            if (strlen($captionSanitized) > 256){
+                http_response_code(400);
+                echo json_encode(["code" => 400, "message"=>"Caption too large. Max 256 characters!"]);
+                exit;
+            }
             $image = new Image($imageName, $captionSanitized, $userId, "", time());
 
             $image->create();
@@ -153,6 +158,12 @@
             }
             else {
                 $captionSanitized = "";
+            }
+
+            if (strlen($captionSanitized) > 256){
+                http_response_code(400);
+                echo json_encode(["code" => 400, "message"=>"Caption too large. Max 256 characters!"]);
+                exit;
             }
 
             $captionSanitized = htmlspecialchars($input_parsed["caption"]);

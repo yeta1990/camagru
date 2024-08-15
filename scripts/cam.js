@@ -213,7 +213,15 @@
                 "watermark": document.getElementById("watermark-display").src
               })
         })
-        .then(response => response.json())
+        .then(response => {
+             if (!response.ok) {
+                 return response.json().then(err => {
+                     throw new Error(err.message || "Upload failed");
+                 });
+             }   
+             return response.json()
+          
+          })
         .then(data => {
             uploadSuccessful();
             document.getElementById("formFeedback").textContent = "Published successfully";
@@ -221,6 +229,7 @@
             displayMyImages(data);
         })
         .catch(error => {
+            uploadSuccessful();
             document.getElementById("formFeedback").textContent = error;
             document.getElementById("formFeedback").style.visibility = "visible";
         });
@@ -273,6 +282,7 @@
              displayMyImages(data);
          })
          .catch(error => {
+          
              document.getElementById("formFeedback").textContent = error;
              document.getElementById("formFeedback").style.visibility = "visible";
          });

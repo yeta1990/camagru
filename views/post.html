@@ -45,7 +45,7 @@
             <button id="startbutton" class="cameraButtons">Take photo</button>
             
 
-            <span style="display: none;" id="caption-cam-span">Caption: <input type="text" id="caption-cam" name="caption"></span>
+            <span style="display: none;" id="caption-cam-span">Caption (max 256 chars):<input type="text" id="caption-cam" name="caption"></span>
             <button id="publish" class="cameraButtons">Publish</button>
             <div id="takeanother-or" class="takeanother-or"> 
                 <a id="takeanother" href="#">...or discard it and take another photo?</a><br> 
@@ -76,7 +76,7 @@
                 <form id="uploadForm" enctype="multipart/form-data">
                     <input type="file" id="imageFile" name="imageFile" accept="image/*" required>
                     <br>
-                    Caption: <input type="text" id="caption" name="caption">
+                    Caption (max 256 chars): <input type="text" id="caption" name="caption">
                     <br>
                     <br>
                     <button type="submit">Upload image</button>
