@@ -33,7 +33,7 @@
 
 
     function getInitialCamWidth(){
-      if (window.innerWidth > 500 && navigator.userAgentData.mobile){
+      if (window.innerWidth > 500 && navigator.userAgentData?.mobile){
         return 360;
       }
       else if (window.innerWidth > 500){
