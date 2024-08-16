@@ -3,7 +3,6 @@ async function authFetch(url, options = {}, contentType = 'application/json') {
     const headers = options.headers || {};
 
     if (token) {
-        //to do: check exp date from token. if expired, remove token and redirect to home
         headers['Authorization'] = `Bearer ${token}`;
         headers['Content-Type'] = contentType;
     }else if(!["/home", "/signup", "/feed"].includes(window.location.pathname)){

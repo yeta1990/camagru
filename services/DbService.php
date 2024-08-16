@@ -29,7 +29,6 @@ class DbService {
     }
 
     private function objectToInsertQuery($tableName, $vars){
-        //$vars = $obj->getObjectVars();
         $insert_into = "INSERT INTO " . $tableName . " (";
         $values = "VALUES (";
         foreach ($vars as $key => $value) {
@@ -45,11 +44,10 @@ class DbService {
         $vars = $object->getObjectVars();
         $query = $this->objectToUpdateQuery($tableName, $vars);
         $result = $this->query($query);
-        //to do: catch exceptions like unique constraint failed, empty field, etc.
         if ($result){
             return 1;
         }
-        return -1;//$this->query($query);
+        return -1;
 
     }
 

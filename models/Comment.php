@@ -23,7 +23,5 @@
             return parent::getObjectVars($safe);
         }
 
-        //to do: function to convert string of array [] likes in a real array
-
     }
 ?>

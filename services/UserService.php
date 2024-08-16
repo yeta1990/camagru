@@ -86,7 +86,6 @@
             $user = new User($email, $username, 1, $password);
             $user_id = $user->create();
 
-            //to do: catch result and exceptions
             if ($user_id < 1) return 1;
             return $user_id;
         }

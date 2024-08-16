@@ -45,7 +45,6 @@
 
             if ($result === FALSE) {
                 return false;
-                //echo "Error sending email";
             } else {
                 return $result;
             }

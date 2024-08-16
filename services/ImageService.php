@@ -276,7 +276,6 @@
             $watermark_h = imagesy($watermark_img);
 
             $dst_im = imagecreatetruecolor($watermark_w,$watermark_h);
-            //$dst_im = imagecreatefromjpeg($back_image);
             $dst_im = imagecreatefrompng($back_image);
             
             $canvas = imagecreatetruecolor($watermark_w, $watermark_h);
@@ -287,16 +286,11 @@
         }
 
         public function mergeImages($back_image, $watermark_path){
-            //$token = $this->jwtService->getBearerToken();
-            //$userId = $this->jwtService->getUserId($token);
-            $userId = 1;
+            $token = $this->jwtService->getBearerToken();
+            $userId = $this->jwtService->getUserId($token);
             $imageFileType = 'png';
             $fileNameToSave =  $userId . '-' . time() . '.' . $imageFileType;
             $targetFile = $this->targetDir . $fileNameToSave;
-
-            //$back_image='assets/b.jpg';
-
-            //parse_url($watermark_path, PHP_URL_PATH);
 
             $watermark = imagecreatefrompng(trim(parse_url($watermark_path, PHP_URL_PATH), "/"));
 
@@ -304,7 +298,6 @@
             imagepng($image, $targetFile);
             unlink('uploads/image.png');
             return $targetFile;
-            //return imagepng($image);
         }
     }
 ?>
