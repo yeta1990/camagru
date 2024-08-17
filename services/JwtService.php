@@ -3,8 +3,10 @@
 class JwtService {
 
 
+    private $db;
     public function __construct(private $jwtKey)
     {
+        $this->db = new DbService();
 
     }
 
@@ -71,9 +73,25 @@ class JwtService {
         return $payload;
     }
 
+    public function blackListToken($token){
+        $query = "INSERT INTO tokens (token) VALUES( '" . strval($token) . "')";
+        $this->db->query($query);
+    }
+
+    private function isTokenBlackListed($token){
+        if (!$this->db->findByCustomField("tokens", "token", $token)->fetchArray()){
+            return false;
+        }
+        return true;
+    }
+
     public function validate($token) {
         if (!$token){
             return false;
+        }
+
+        if ($this->isTokenBlackListed($token)){
+            return false; 
         }
         $matches = $this->decode($token);
         //calculating signature from the header and payload of the token, then comparing with the original signature

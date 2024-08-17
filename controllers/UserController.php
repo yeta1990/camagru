@@ -37,7 +37,7 @@
                         $user['email'],
                         $user['username'],
                         'Login camagru-albgarci',
-                        'To log into camagru-albgarci follow this link (valid for 10 min): <a href="http://localhost:8080/api/user/login2?token=' . $token . '">Verify</a>');
+                        'To log into camagru-albgarci follow this link (valid for 10 min): <a href="http://localhost:8080/api/user/login2?token=' . $token . '">Login</a>');
                     echo json_encode(["code" => 200, "message"=>"Good credentials provided! To finish login, click on the link sent to your email"]);
                 }
                 else if ($user){
@@ -57,13 +57,14 @@
             if(isset($this->query["token"]) && $this->jwtService->validate($this->query["token"])){
                 $token = $this->query["token"];
                 $userId = $this->jwtService->getUserId($token);
+                $this->jwtService->blackListToken($token); //to make sure login token only is used once
                 $userToken = $this->jwtService->generateToken($userId);
                 header("HTTP/1.1 301 Moved Permanently");
                 header("Location: /loginok?token=" . $userToken);
                 exit;
             } else{
                 http_response_code(400);
-                echo json_encode("Bad token, probably expired, try to login again");
+                echo json_encode("Bad token, probably expired or already used, try to login again");
                 exit;
             }
         }
