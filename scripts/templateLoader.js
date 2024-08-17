@@ -14,13 +14,28 @@ async function loadTemplate(url, targetElementId) {
 }
 
 function addHeaderFunctionality() {
+
     const logoutButton = document.getElementById('logoutButton');
-    if (logoutButton) {
+    const editLinkButton = document.getElementById('editLink');
+    const newPostLink = document.getElementById('newPostLink');
+
+    if (logoutButton && localStorage.getItem("token") != null) {
         logoutButton.addEventListener('click', () => {
             localStorage.removeItem('token');
             window.location.href = '/home';
         });
     }
+    else if (logoutButton && editLinkButton && newPostLink){
+        logoutButton.style.display = 'none';
+        editLinkButton.style.display = 'none';
+        newPostLink.style.display = 'none';
+    }
+    const headerLink = document.getElementById('headerLink');
+    if (headerLink && localStorage.getItem("token") != null){
+        headerLink.style.display = 'none';
+    }
+
+
 }
 
 function addFooterFunctionality() {

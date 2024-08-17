@@ -37,6 +37,8 @@ document.getElementById('signupForm').addEventListener('submit', function(event)
     .then(data => {
         document.getElementById("signupFeedback").textContent = "Created successfully. Before login, you must confirm your account, check your mail!";
         document.getElementById("signupFeedback").style.visibility = "visible";
+        document.getElementById("signupForm").style.visibility = "hidden"
+        document.getElementById("signupForm").style.display = "none"
     })
     .catch(error => {
         document.getElementById("signupFeedback").textContent = error;
