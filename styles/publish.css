@@ -64,6 +64,11 @@
     position: relative;
 }
 
+.previewContainer {
+    position: relative;
+
+}
+
 .watermark {
     position:absolute;
     top: 0;
@@ -87,4 +92,20 @@
 
 .watermark-img img{
     position: relative;
+}
+
+
+#watermarkPublisha{
+    top:30%;
+    width:30%;
+}
+
+#watermarkPublishb{
+    width:30%;
+}
+
+
+#watermarkPublishc{
+    left: 30%;
+    width: 40%;
 }

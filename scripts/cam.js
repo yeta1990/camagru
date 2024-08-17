@@ -265,6 +265,16 @@
          var imageFile = document.getElementById('imageFile').files[0];
          formData.append('imageFile', imageFile);
          formData.append('caption', document.getElementById("caption").value);
+
+         if (document.getElementById("watermarkPublisha").style.display == "block"){
+          formData.append('watermarka', document.getElementById("watermarkPublisha").firstElementChild.width);
+         }
+         if (document.getElementById("watermarkPublishb").style.display == "block"){
+          formData.append('watermarkb', document.getElementById("watermarkPublishb").firstElementChild.width);
+         }
+         if (document.getElementById("watermarkPublishc").style.display == "block"){
+          formData.append('watermarkc', document.getElementById("watermarkPublishc").firstElementChild.width);
+         }
          fetch('/api/image', {
              method: 'POST',
              headers,
@@ -291,11 +301,42 @@
          });
      });
 
+     function toggleVisibleDiv(id){
+        const div = document.getElementById(id);
+        if (div.style.display == 'none'){
+          div.style.display = 'block';
+        }
+        else{
+          div.style.display = 'none';
+        }
+     }
      
+
+    document.getElementById('cat2').addEventListener("click", function(event){
+         const src = document.getElementById("cat2").firstElementChild.src
+         console.log(src);
+         document.getElementById("watermark-displayb").src = src;
+         toggleVisibleDiv('watermarkPublishb');
+     })
+     document.getElementById('dog2').addEventListener("click", function(event){
+         const src = document.getElementById("dog2").firstElementChild.src
+         document.getElementById("watermark-displaya").src = src;
+         toggleVisibleDiv('watermarkPublisha');
+     })
+     document.getElementById('sloth2').addEventListener("click", function(event){
+         const src = document.getElementById("sloth2").firstElementChild.src
+         document.getElementById("watermark-displayc").src = src;
+         toggleVisibleDiv('watermarkPublishc');
+     })
+
+
      document.getElementById('imageFile').addEventListener('change', function(event) {
       const file = event.target.files[0];
       const formFeedback = document.getElementById('formFeedback');
       const imagePreview = document.getElementById('imagePreview');
+      document.getElementById("watermarkPublisha").style.display = 'none';
+      document.getElementById("watermarkPublishb").style.display = 'none';
+      document.getElementById("watermarkPublishc").style.display = 'none';
 
       formFeedback.style.visibility = 'hidden';
       imagePreview.style.display = 'none';
