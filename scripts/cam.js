@@ -184,6 +184,7 @@
       document.getElementById("takePhotoContainer").style.display = "none";
       document.getElementById("formFeedback").style.visibility= "hidden";
       document.getElementById("caption-cam").value = "";
+      document.getElementById("imageFile").value = ''
       
     })
 
