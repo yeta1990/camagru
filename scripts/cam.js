@@ -185,6 +185,8 @@
       document.getElementById("formFeedback").style.visibility= "hidden";
       document.getElementById("caption-cam").value = "";
       document.getElementById("imageFile").value = ''
+      document.getElementById("imagePreview").style.display = "none";
+      document.getElementById("formFeedback").style.color="white";
       
     })
 
@@ -288,3 +290,53 @@
              document.getElementById("formFeedback").style.visibility = "visible";
          });
      });
+
+     
+     document.getElementById('imageFile').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      const formFeedback = document.getElementById('formFeedback');
+      const imagePreview = document.getElementById('imagePreview');
+
+      formFeedback.style.visibility = 'hidden';
+      imagePreview.style.display = 'none';
+      document.getElementById("formFeedback").style.color="white";
+
+      if (file) {
+          const validMimeTypes = ['image/jpeg', 'image/png'];
+          if (!validMimeTypes.includes(file.type)) {
+              formFeedback.textContent = 'Invalid image type. Only JPEG are PNG are allowed.';
+              document.getElementById("formFeedback").style.color="red"
+              formFeedback.style.visibility = 'visible';
+              return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = function(e) {
+              const arr = (new Uint8Array(e.target.result)).subarray(0, 4);
+              let header = "";
+              for(let i = 0; i < arr.length; i++) {
+                  header += arr[i].toString(16);
+              }
+
+              const magicNumbers = {
+                  '89504e47': 'image/png',
+                  'ffd8ffe0': 'image/jpeg',
+                  'ffd8ffe1': 'image/jpeg',
+                  'ffd8ffe2': 'image/jpeg',
+              };
+
+              if (!magicNumbers[header]) {
+                  formFeedback.textContent = 'Invalid image, file does not match any allowed MIME type.';
+                  document.getElementById("formFeedback").style.color="red"
+                  formFeedback.style.visibility = 'visible';
+                  return;
+              }
+
+              const imageUrl = URL.createObjectURL(file);
+              imagePreview.src = imageUrl;
+              imagePreview.style.display = 'block';
+          };
+
+          reader.readAsArrayBuffer(file);
+      }
+  });
