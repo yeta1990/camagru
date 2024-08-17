@@ -2,10 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit User</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recover account - Change password</title>
 
 
-    <script src="/scripts/tokenFromUrl.js" defer></script>
+    <link rel="stylesheet" href="../../styles/pico.min.css">
+    <link rel="stylesheet" href="../../styles/myPico.css">
+    <link rel="stylesheet" href="../../styles/normalize.css">
+    <script src="/scripts/changePass.js" defer></script>
+    <script src="/scripts/templateLoader.js"></script>
 </head>
 <body>
+
+    <h1>Recover account - Change password</h1>
+    
+
+    <div class="container">
+
+        <form id="editForm">
+            <label for="password">Change password: </label>
+            <input type="password" id="password" name="password">
+            <input type="submit">
+        </form>
+
+        <span style="visibility: hidden;" id="editFeedback"></span>
+        <br />
+    </div>
+
+
+    <div id="footerContainer"></div>
+    
 </body>

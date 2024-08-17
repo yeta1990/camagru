@@ -22,6 +22,7 @@
             $this->addRoute('POST', 'api/user/signup', 'signup');
             $this->addRoute('POST', 'api/user/edit', 'edit');
             $this->addRoute('POST', 'api/user/recover', 'recover');
+            $this->addRoute('POST', 'api/user/changepass', 'changePass');
             $this->addRoute('POST', 'api/user/notifications', 'toggleNotifications');
         }
 
@@ -157,6 +158,20 @@
             }
             echo json_encode(["code" => 200, "message"=>"ok"]);
 
+        }
+
+        protected function changePass() {
+            $jwtRecoverService = new JwtService(getenv("JWT_RECOVER"));
+            $request_body = json_decode(file_get_contents('php://input'), true);
+            if(isset($request_body["token"]) && $jwtRecoverService->validate($request_body["token"])){
+                $userId = $jwtRecoverService->getUserId($request_body["token"]);
+                $this->userService->changePassword($userId, $request_body["password"]);
+                $jwtRecoverService->blackListToken($request_body["token"]);
+                echo json_encode(["code" => 200, "message"=>"ok"]);
+                exit;
+            }
+            http_response_code(400);
+            echo json_encode(["status" => 400, "message" => "Error changing password, probably the link expired, try recovering it again"]);
         }
 
         protected function toggleNotifications(){

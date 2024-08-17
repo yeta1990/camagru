@@ -48,7 +48,12 @@ $whitelistRoutes = [
     [
         "path" => "api/user/login2",
         "method" => "GET"
+    ],
+    [
+        "path" => "api/user/changepass",
+        "method" => "POST"
     ]
+
 
 ];
 
