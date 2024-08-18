@@ -361,13 +361,23 @@
                   return;
               }
   
-              validateImageDimensions(file, imagePreview, formFeedback);
+              validateImageSize(file, formFeedback) && validateImageDimensions(file, imagePreview, formFeedback);
           };
   
           reader.readAsArrayBuffer(file);
       }
   });
   
+  function validateImageSize(file, formFeedback) {
+    const maxSize = 5 * 1024 * 1024; //5mb in bytes
+
+    if (file.size > maxSize) {
+        showError(formFeedback, 'Image size must not exceed 5MB.');
+        return false;
+    }
+    return true;
+}
+
   function validateMimeType(file) {
       const validMimeTypes = ['image/jpeg', 'image/png'];
       return validMimeTypes.includes(file.type);
@@ -420,4 +430,5 @@
       formFeedback.style.color = "red";
       formFeedback.style.visibility = 'visible';
       document.getElementById("watermark-container").style.display = "none";
+      document.getElementById("imageFile").value = ''
   }

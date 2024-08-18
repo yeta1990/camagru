@@ -74,7 +74,7 @@
 
         private function checkImageSize() {
 
-            $maxSize = 5000000; //bytes
+            $maxSize = 5 * 1024 * 1024; //5mb in bytes
 
             if ($_FILES["imageFile"]["size"] > $maxSize) {
                 http_response_code(400);
@@ -85,7 +85,7 @@
  
         public function checkUploadedImageSize() {
 
-            $maxSize = 5000000; // bytes
+            $maxSize = 5 * 1024 * 1024; //5mb in bytes
             $minWidth = 800; 
             $maxAspectRatio = 16 / 9;
         
