@@ -188,6 +188,7 @@
       document.getElementById("imagePreview").style.display = "none";
       document.getElementById("formFeedback").style.color="white";
       document.getElementById("watermark-container").style.display = "none";
+      document.getElementById("watermark-container-title").style.display = "none";
       
     })
 
@@ -417,6 +418,7 @@
             imagePreview.src = imageUrl;
             imagePreview.style.display = 'block';
             document.getElementById("watermark-container").style.display = "flex";
+            document.getElementById("watermark-container-title").style.display = "block";
         } else {
             showError(formFeedback, `Image must have a minimum aspect ratio of 1:1 and max of 16:9.`);
         }
@@ -430,5 +432,6 @@
       formFeedback.style.color = "red";
       formFeedback.style.visibility = 'visible';
       document.getElementById("watermark-container").style.display = "none";
+      document.getElementById("watermark-container-title").style.display = "none";
       document.getElementById("imageFile").value = ''
   }

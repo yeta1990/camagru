@@ -92,6 +92,10 @@
     flex-direction: row;
 }
 
+.watermark-img{
+    cursor:pointer;
+}
+
 .watermark-img img{
     position: relative;
 }
