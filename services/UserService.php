@@ -31,16 +31,25 @@
             if ($username == "you"){
                 return false;
             }
-            $num_users = $this->db->query("SELECT count(*) as count from users where username = \"{$username}\"")->fetchArray();
+            $query = $this->db->getDb()->prepare("SELECT count(*) as count from users where username = :username;");
+            $query->bindValue(':username', $username);
+            $num_users = $query->execute()->fetchArray();
             if (strlen($username) > 1 && strlen($username) < 256 && $num_users["count"] == 0){
                 return true;
             }
             return false;
         }
 
+        public function isValidEmail($email){
+            return filter_var($email, FILTER_VALIDATE_EMAIL);
+        }
+
+
         public function isEmailAvailable($email){
-            $num_users = $this->db->query("SELECT count(*) as count from users where email = \"{$email}\"")->fetchArray();
-            if (strlen($email) > 1 && strlen($email) < 256 && $num_users["count"] == 0){
+            $query = $this->db->getDb()->prepare("SELECT count(*) as count from users where email = :email;");
+            $query->bindValue(':email', $email);
+            $num_users = $query->execute()->fetchArray();
+            if ($this->isValidEmail($email) && strlen($email) > 1 && strlen($email) < 256 && $num_users["count"] == 0){
                 return true;
             }
             return false;
