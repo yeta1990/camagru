@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
          })
          .catch(error => {
          });
+
  });
  document.getElementById('notif-checkbox').addEventListener('change', function(event){
      event.preventDefault();
