@@ -302,9 +302,22 @@
 
 
         private function resizeBackground($back_image, $maxWidth, $maxHeight) {
+            $imageInfo = getimagesize($back_image);
+            $mimeType = $imageInfo['mime'];
+
+            //if the image is a jpg, convert it to png
+            if ($mimeType === 'image/jpeg') {
+                $image = imagecreatefromjpeg($back_image);
+                $pngPath = preg_replace('/\.(jpg|jpeg)$/i', '.png', $back_image);
+                imagepng($image, $pngPath);
+                imagedestroy($image); //free memory
+                unlink($back_image); //remove original jpg
+                $back_image = $pngPath;
+            } 
+
             list($width, $height) = getimagesize($back_image);
         
-            if ($width > $maxWidth || $height > $maxHeight) {
+            if ($width > $maxWidth && $height > $maxHeight) {
                 $ratio = max($maxWidth / $width, $maxHeight / $height);
                 $newWidth = intval($width * $ratio);
                 $newHeight = intval($height * $ratio);
@@ -317,10 +330,13 @@
         
                 return $imageResized;
             } else {
-                return imagecreatefrompng($back_image);
+                $image = imagecreatefrompng($back_image);
+                imagealphablending($image, false);
+                imagesavealpha($image, true);
+                return $image;
             }
         }
-        
+
         public function mergeImages($back_image, $watermark_paths, $maxWidth = 800, $maxHeight = 500) {
             $token = $this->jwtService->getBearerToken();
             $userId = $this->jwtService->getUserId($token);
@@ -331,31 +347,44 @@
 
             $background = $this->resizeBackground($back_image, $maxWidth, $maxHeight);
             imagepng($background, $backImagePath);
-        
-            foreach ($watermark_paths as $watermark_path) {
-                $watermark = imagecreatefrompng(trim(parse_url($watermark_path, PHP_URL_PATH), "/"));
-                $background = $this->imageMergeAlpha($backImagePath, $watermark, 0, 0, 0, 0);
-        
-                imagepng($background, $backImagePath);
+
+            if (count($watermark_paths) > 3) { //there are only 3 available watermarks
+                echo json_encode(["code" => 400, "message"=>"What are you trying to do?"]);
+                http_response_code(400);
+                unlink($backImagePath);
+                unlink($targetFile);
+                exit;
             }
-        
+            if (count($watermark_paths) > 0 && strlen($watermark_paths[0] > 0)) {
+                foreach ($watermark_paths as $watermark_path) {
+                    $watermark = trim(parse_url($watermark_path, PHP_URL_PATH), "/");
+                    if (!file_exists($watermark)) {
+                        echo json_encode(["code" => 400, "message"=>"Watermark image path provided not exist"]);
+                        http_response_code(400);
+                        unlink($backImagePath);
+                        unlink($targetFile);
+                        exit;
+                    }
+                    
+                    $background = $this->imageMergeAlpha($backImagePath, $watermark);
+                    imagepng($background, $backImagePath);
+                }
+            }
+
             imagepng($background, $targetFile);
             unlink($backImagePath);
             return $targetFile;
         }
 
-        private function imageMergeAlpha($back_image, $watermark_img, $dst_x, $dst_y, $src_x, $src_y){
-            $src_opacity = 100;
-            $watermark_w = imagesx($watermark_img);
-            $watermark_h = imagesy($watermark_img);
-
-            $dst_im = imagecreatefrompng($back_image);
-
-            $canvas = imagecreatetruecolor($watermark_w, $watermark_h);
-            imagecopy($canvas, $dst_im, 0, 0, $dst_x * $watermark_w / 100, $dst_y, $watermark_w, $watermark_h);
-            imagecopy($canvas, $watermark_img, 0, 0, $src_x, $src_y, $watermark_w, $watermark_h);
-            imagecopymerge($dst_im, $canvas, $dst_x * $watermark_w / 100, $dst_y, 0, 0, $watermark_w, $watermark_h, $src_opacity);
-            return $dst_im;
+        private function imageMergeAlpha($back_image, $watermark_img){
+            $image_1 = imagecreatefrompng($back_image);
+            $image_2 = imagecreatefrompng($watermark_img);
+            imagealphablending($image_1, true);
+            imagesavealpha($image_1, true);
+            $final_w = imagesx($image_2);
+            $final_h = imagesy($image_2);
+            imagecopy($image_1, $image_2, 0, 0, 0, 0, $final_w, $final_h);
+            return $image_1;
         }
 
     }
