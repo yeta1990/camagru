@@ -66,6 +66,8 @@
 
 .previewContainer {
     position: relative;
+    max-width: 800px;
+    width:100%;
 
 }
 
@@ -96,16 +98,18 @@
 
 
 #watermarkPublisha{
-    top:30%;
-    width:30%;
+    width:100%;
 }
 
 #watermarkPublishb{
-    width:30%;
+    width:100%;
 }
 
 
 #watermarkPublishc{
-    left: 30%;
-    width: 40%;
+    width:100%;
+}
+
+.watermark img {
+    width:100%;
 }

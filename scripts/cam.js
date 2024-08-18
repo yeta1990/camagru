@@ -187,6 +187,7 @@
       document.getElementById("imageFile").value = ''
       document.getElementById("imagePreview").style.display = "none";
       document.getElementById("formFeedback").style.color="white";
+      document.getElementById("watermark-container").style.display = "none";
       
     })
 
@@ -264,17 +265,22 @@
          var formData = new FormData();
          var imageFile = document.getElementById('imageFile').files[0];
          formData.append('imageFile', imageFile);
+         formData.append('width', document.getElementById("imagePreview").width);
+         formData.append('height', document.getElementById("imagePreview").height);
          formData.append('caption', document.getElementById("caption").value);
 
+         let watermarks = [];
          if (document.getElementById("watermarkPublisha").style.display == "block"){
-          formData.append('watermarka', document.getElementById("watermarkPublisha").firstElementChild.width);
+          watermarks.push(document.getElementById("watermarkPublisha").firstElementChild.src);
          }
          if (document.getElementById("watermarkPublishb").style.display == "block"){
-          formData.append('watermarkb', document.getElementById("watermarkPublishb").firstElementChild.width);
+          watermarks.push(document.getElementById("watermarkPublishb").firstElementChild.src);
          }
          if (document.getElementById("watermarkPublishc").style.display == "block"){
-          formData.append('watermarkc', document.getElementById("watermarkPublishc").firstElementChild.width);
+          watermarks.push(document.getElementById("watermarkPublishc").firstElementChild.src);
          }
+
+         formData.append('watermarks', watermarks);
          fetch('/api/image', {
              method: 'POST',
              headers,
@@ -315,17 +321,17 @@
     document.getElementById('cat2').addEventListener("click", function(event){
          const src = document.getElementById("cat2").firstElementChild.src
          console.log(src);
-         document.getElementById("watermark-displayb").src = src;
+         document.getElementById("watermark-displayb").src = "assets/cat-big.png";
          toggleVisibleDiv('watermarkPublishb');
      })
      document.getElementById('dog2').addEventListener("click", function(event){
          const src = document.getElementById("dog2").firstElementChild.src
-         document.getElementById("watermark-displaya").src = src;
+         document.getElementById("watermark-displaya").src = "assets/dog-big.png";
          toggleVisibleDiv('watermarkPublisha');
      })
      document.getElementById('sloth2').addEventListener("click", function(event){
          const src = document.getElementById("sloth2").firstElementChild.src
-         document.getElementById("watermark-displayc").src = src;
+         document.getElementById("watermark-displayc").src = "assets/sloth-big.png";
          toggleVisibleDiv('watermarkPublishc');
      })
 
@@ -337,47 +343,81 @@
       document.getElementById("watermarkPublisha").style.display = 'none';
       document.getElementById("watermarkPublishb").style.display = 'none';
       document.getElementById("watermarkPublishc").style.display = 'none';
-
+      
       formFeedback.style.visibility = 'hidden';
       imagePreview.style.display = 'none';
-      document.getElementById("formFeedback").style.color="white";
-
+      document.getElementById("formFeedback").style.color = "white";
+  
       if (file) {
-          const validMimeTypes = ['image/jpeg', 'image/png'];
-          if (!validMimeTypes.includes(file.type)) {
-              formFeedback.textContent = 'Invalid image type. Only JPEG are PNG are allowed.';
-              document.getElementById("formFeedback").style.color="red"
-              formFeedback.style.visibility = 'visible';
+          if (!validateMimeType(file)) {
+              showError(formFeedback, 'Invalid image type. Only JPEG and PNG are allowed.');
               return;
           }
-
+  
           const reader = new FileReader();
           reader.onload = function(e) {
-              const arr = (new Uint8Array(e.target.result)).subarray(0, 4);
-              let header = "";
-              for(let i = 0; i < arr.length; i++) {
-                  header += arr[i].toString(16);
-              }
-
-              const magicNumbers = {
-                  '89504e47': 'image/png',
-                  'ffd8ffe0': 'image/jpeg',
-                  'ffd8ffe1': 'image/jpeg',
-                  'ffd8ffe2': 'image/jpeg',
-              };
-
-              if (!magicNumbers[header]) {
-                  formFeedback.textContent = 'Invalid image, file does not match any allowed MIME type.';
-                  document.getElementById("formFeedback").style.color="red"
-                  formFeedback.style.visibility = 'visible';
+              if (!validateMagicNumbers(e.target.result)) {
+                  showError(formFeedback, 'Invalid image, file does not match any allowed MIME type.');
                   return;
               }
-
-              const imageUrl = URL.createObjectURL(file);
-              imagePreview.src = imageUrl;
-              imagePreview.style.display = 'block';
+  
+              validateImageDimensions(file, imagePreview, formFeedback);
           };
-
+  
           reader.readAsArrayBuffer(file);
       }
   });
+  
+  function validateMimeType(file) {
+      const validMimeTypes = ['image/jpeg', 'image/png'];
+      return validMimeTypes.includes(file.type);
+  }
+  
+  function validateMagicNumbers(buffer) {
+      const arr = (new Uint8Array(buffer)).subarray(0, 4);
+      let header = "";
+      for (let i = 0; i < arr.length; i++) {
+          header += arr[i].toString(16);
+      }
+  
+      const magicNumbers = {
+          '89504e47': 'image/png',
+          'ffd8ffe0': 'image/jpeg',
+          'ffd8ffe1': 'image/jpeg',
+          'ffd8ffe2': 'image/jpeg',
+      };
+  
+      return magicNumbers[header] !== undefined;
+  }
+  
+  function validateImageDimensions(file, imagePreview, formFeedback) {
+    // Validate the image's dimensions and aspect ratio for both horizontal and vertical orientations
+    const imageUrl = URL.createObjectURL(file);
+    const img = new Image();
+
+    img.onload = function() {
+        const minWidth = 800;
+        const maxAspectRatio = 16 / 9;
+        const imageAspectRatio = img.width >= img.height ? img.width / img.height : img.height / img.width;
+
+        if (img.width < minWidth) {
+            showError(formFeedback, `Image width must be at least ${minWidth}px.`);
+        }
+        else if (imageAspectRatio <= maxAspectRatio && imageAspectRatio >= 1) {
+            imagePreview.src = imageUrl;
+            imagePreview.style.display = 'block';
+            document.getElementById("watermark-container").style.display = "flex";
+        } else {
+            showError(formFeedback, `Image must have a minimum aspect ratio of 1:1 and max of 16:9.`);
+        }
+    };
+
+    img.src = imageUrl;
+}
+  
+  function showError(formFeedback, message) {
+      formFeedback.textContent = message;
+      formFeedback.style.color = "red";
+      formFeedback.style.visibility = 'visible';
+      document.getElementById("watermark-container").style.display = "none";
+  }

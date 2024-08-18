@@ -13,7 +13,7 @@
             $this->userService = new UserService();
         }
 
-        private function checkImageFiletype(){
+        public function checkImageFiletype(){
 
             if (!isset($_FILES["imageFile"]["tmp_name"]) || $_FILES["imageFile"]["tmp_name"] == ""){
                 http_response_code(400);
@@ -74,7 +74,7 @@
 
         private function checkImageSize() {
 
-            $maxSize = 500000; //bytes
+            $maxSize = 5000000; //bytes
 
             if ($_FILES["imageFile"]["size"] > $maxSize) {
                 http_response_code(400);
@@ -82,8 +82,38 @@
                 exit;
             }
         }
+ 
+        public function checkUploadedImageSize() {
 
-        private function checkImageValidity() {
+            $maxSize = 5000000; // bytes
+            $minWidth = 800; 
+            $maxAspectRatio = 16 / 9;
+        
+            if ($_FILES["imageFile"]["size"] > $maxSize) {
+                http_response_code(400);
+                echo json_encode(["code" => 400, "message" => "File too large"]);
+                exit;
+            }
+        
+            list($width, $height) = getimagesize($_FILES["imageFile"]["tmp_name"]);
+        
+            if ($width < $minWidth) {
+                http_response_code(400);
+                echo json_encode(["code" => 400, "message" => "Image width must be at least {$minWidth}px."]);
+                exit;
+            }
+        
+            $imageAspectRatio = $width >= $height ? $width / $height : $height / $width;
+        
+            if ($imageAspectRatio < 1 || $imageAspectRatio > $maxAspectRatio) {
+                http_response_code(400);
+                echo json_encode(["code" => 400, "message" => "Image must have a minimum aspect ratio of 1:1 and a maximum of 16:9."]);
+                exit;
+            }
+        
+        }
+
+        public function checkImageValidity() {
             $check = getimagesize($_FILES["imageFile"]["tmp_name"]);
     
             if ($check === false) {
@@ -270,34 +300,63 @@
             
         }
 
+
+        private function resizeBackground($back_image, $maxWidth, $maxHeight) {
+            list($width, $height) = getimagesize($back_image);
+        
+            if ($width > $maxWidth || $height > $maxHeight) {
+                $ratio = max($maxWidth / $width, $maxHeight / $height);
+                $newWidth = intval($width * $ratio);
+                $newHeight = intval($height * $ratio);
+        
+                $image = imagecreatefrompng($back_image);
+                $imageResized = imagescale($image, $newWidth);
+        
+                imagealphablending($imageResized, false);
+                imagesavealpha($imageResized, true);
+        
+                return $imageResized;
+            } else {
+                return imagecreatefrompng($back_image);
+            }
+        }
+        
+        public function mergeImages($back_image, $watermark_paths, $maxWidth = 800, $maxHeight = 500) {
+            $token = $this->jwtService->getBearerToken();
+            $userId = $this->jwtService->getUserId($token);
+            $imageFileType = 'png';
+            $fileNameToSave = $userId . '-' . time() . '.' . $imageFileType;
+            $targetFile = $this->targetDir . $fileNameToSave;
+            $backImagePath = $this->targetDir . $userId . '-' . time() . '-back.' . $imageFileType;
+
+            $background = $this->resizeBackground($back_image, $maxWidth, $maxHeight);
+            imagepng($background, $backImagePath);
+        
+            foreach ($watermark_paths as $watermark_path) {
+                $watermark = imagecreatefrompng(trim(parse_url($watermark_path, PHP_URL_PATH), "/"));
+                $background = $this->imageMergeAlpha($backImagePath, $watermark, 0, 0, 0, 0);
+        
+                imagepng($background, $backImagePath);
+            }
+        
+            imagepng($background, $targetFile);
+            unlink($backImagePath);
+            return $targetFile;
+        }
+
         private function imageMergeAlpha($back_image, $watermark_img, $dst_x, $dst_y, $src_x, $src_y){
             $src_opacity = 100;
             $watermark_w = imagesx($watermark_img);
             $watermark_h = imagesy($watermark_img);
 
-            $dst_im = imagecreatetruecolor($watermark_w,$watermark_h);
             $dst_im = imagecreatefrompng($back_image);
-            
+
             $canvas = imagecreatetruecolor($watermark_w, $watermark_h);
-            imagecopy($canvas, $dst_im, 0, 0, $dst_x, $dst_y, $watermark_w, $watermark_h);
+            imagecopy($canvas, $dst_im, 0, 0, $dst_x * $watermark_w / 100, $dst_y, $watermark_w, $watermark_h);
             imagecopy($canvas, $watermark_img, 0, 0, $src_x, $src_y, $watermark_w, $watermark_h);
-            imagecopymerge($dst_im, $canvas, $dst_x, $dst_y, 0, 0, $watermark_w, $watermark_h, $src_opacity);
+            imagecopymerge($dst_im, $canvas, $dst_x * $watermark_w / 100, $dst_y, 0, 0, $watermark_w, $watermark_h, $src_opacity);
             return $dst_im;
         }
 
-        public function mergeImages($back_image, $watermark_path){
-            $token = $this->jwtService->getBearerToken();
-            $userId = $this->jwtService->getUserId($token);
-            $imageFileType = 'png';
-            $fileNameToSave =  $userId . '-' . time() . '.' . $imageFileType;
-            $targetFile = $this->targetDir . $fileNameToSave;
-
-            $watermark = imagecreatefrompng(trim(parse_url($watermark_path, PHP_URL_PATH), "/"));
-
-            $image = $this->imageMergeAlpha($back_image, $watermark, 0, 0, 0, 0);
-            imagepng($image, $targetFile);
-            unlink('uploads/image.png');
-            return $targetFile;
-        }
     }
 ?>

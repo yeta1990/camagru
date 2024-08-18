@@ -28,6 +28,10 @@
         protected function postImage(){
             $token = $this->jwtService->getBearerToken();
             $userId = $this->jwtService->getUserId($token);
+            $this->imageService->checkImageFiletype();
+            $this->imageService->checkUploadedImageSize();
+            $this->imageService->checkImageValidity();
+
             $imageName = $this->imageService->postImage();
             $captionSanitized = htmlspecialchars($_POST["caption"]);
             if (strlen($captionSanitized) > 256){
@@ -35,10 +39,11 @@
                 echo json_encode(["code" => 400, "message"=>"Caption too large. Max 256 characters!"]);
                 exit;
             }
+
+            $watermarks = explode (",", $_POST["watermarks"]);
+            $imageName = $this->imageService->mergeImages($imageName, $watermarks);
             $image = new Image($imageName, $captionSanitized, $userId, "", time());
-
             $image->create();
-
             echo json_encode($this->imageService->getImageByUserId($userId));
         }
 
@@ -152,7 +157,7 @@
             $data = base64_decode($data);
             file_put_contents('uploads/image.png', $data);
 
-            $imageName = $this->imageService->mergeImages('uploads/image.png', $input_parsed["watermark"]);
+            $imageName = $this->imageService->mergeImages('uploads/image.png', [$input_parsed["watermark"]]);
             if (isset($input_parsed["caption"])){
                 $captionSanitized = htmlspecialchars($input_parsed["caption"]);
             }
