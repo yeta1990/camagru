@@ -4,7 +4,7 @@ export function validLength(field){
 }
 
 export function isValidEmail(email){
-    return true;
+    return true; //not necessary since type="email"
     return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email);
 }
 
