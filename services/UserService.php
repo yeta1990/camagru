@@ -154,11 +154,13 @@
         public function recover($email){
             if (!$this->isEmailAvailable($email)){ //if the mail isn't available, that means the user exists...
                 $user = $this->getUserByEmail($email);
-                $jwtRecoverService = new JwtService(getenv("JWT_RECOVER"));
-                $recoveryToken = $jwtRecoverService->generateConfirmationAccountToken($user["id"]);
-                MailService::send($email, $email, 'Recover password',
-                    'Change the password for your account in camagru-albgarci: <a href="http://localhost:8080/user/edit/pass?token=' . $recoveryToken . '">Change</a>'
-                );
+                if ($user["confirmed"] == 1){
+                    $jwtRecoverService = new JwtService(getenv("JWT_RECOVER"));
+                    $recoveryToken = $jwtRecoverService->generateConfirmationAccountToken($user["id"]);
+                    MailService::send($email, $email, 'Recover password',
+                        'Change the password for your account in camagru-albgarci: <a href="http://localhost:8080/user/edit/pass?token=' . $recoveryToken . '">Change</a>'
+                    );
+                }
             }
         }
 

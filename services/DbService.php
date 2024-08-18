@@ -10,7 +10,7 @@ class DbService {
     public function __destruct(){
         $this->db->close();
     }
-    
+
     public function getDb(){
         return $this->db;
     }
