@@ -3,6 +3,10 @@
 ## Overview
 This project is a photo-sharing web application inspired by platforms like Instagram. Users can upload, edit, and share images with the community. It emphasizes modular design, security, and reusability, ensuring smooth user interaction and developer flexibility.
 
+![image](https://github.com/user-attachments/assets/a4b08d25-b9e5-465e-a002-c98af70811af)
+![image](https://github.com/user-attachments/assets/59f83c1b-2c93-4a5c-afe7-e332816f1197)
+
+
 ---
 
 ## Architecture
